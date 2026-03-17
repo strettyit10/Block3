@@ -1,0 +1,688 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}
+body{background:#F8FAFC;color:#0F172A;font-size:13px;}
+.hdr{background:#7C3AED;color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.hdr-title{font-size:14px;font-weight:700;}
+.hdr-sub{font-size:10px;opacity:.8;}
+.mode-btns{display:flex;gap:6px;}
+.mbtn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600;}
+.mbtn.active{background:#fff;color:#7C3AED;}
+#dashboard{padding:14px 16px;}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.stat{background:#fff;border:1px solid #E2E8F0;border-radius:8px;padding:10px 12px;text-align:center;}
+.stat .n{font-size:22px;font-weight:700;color:#7C3AED;}
+.stat .l{font-size:10px;color:#64748B;margin-top:2px;}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center;}
+.filter-bar label{font-size:10px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+.fbtn{padding:4px 10px;border-radius:12px;border:1px solid #CBD5E1;background:#fff;color:#475569;font-size:11px;cursor:pointer;font-weight:500;}
+.fbtn.on{background:#7C3AED;color:#fff;border-color:#7C3AED;}
+.start-btn{background:#7C3AED;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer;display:block;width:100%;margin-top:6px;}
+.start-btn:hover{background:#6D28D9;}
+#quiz{display:none;padding:14px 16px;}
+.qbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.qnum{font-size:11px;font-weight:700;color:#7C3AED;}
+.qprog{flex:1;background:#E2E8F0;border-radius:4px;height:5px;}
+.qprog-fill{background:#7C3AED;border-radius:4px;height:5px;transition:width .3s;}
+.timer-box{background:#FEF9C3;border:1px solid #FDE047;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700;color:#713F12;min-width:52px;text-align:center;}
+.timer-box.warn{background:#FEE2E2;border-color:#F87171;color:#991B1B;}
+.tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;align-items:center;}
+.tag{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;}
+.tag-lec{background:#EDE9FE;color:#5B21B6;}
+.tag-top{background:#DBEAFE;color:#1E40AF;}
+.tag-trap{background:#FEF3C7;color:#92400E;}
+.flag-btn{margin-left:auto;background:none;border:none;cursor:pointer;font-size:16px;padding:2px;}
+.qcard{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:14px 16px;margin-bottom:12px;}
+.qtext{font-size:12.5px;line-height:1.75;color:#0F172A;margin-bottom:14px;}
+.choices{display:flex;flex-direction:column;gap:6px;}
+.choice{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:8px;border:1.5px solid #E2E8F0;cursor:pointer;background:#fff;}
+.choice:hover:not(.disabled){background:#F5F3FF;border-color:#A78BFA;}
+.choice.selected{background:#EDE9FE;border-color:#7C3AED;}
+.choice.correct{background:#D1FAE5!important;border-color:#059669!important;}
+.choice.wrong{background:#FEE2E2!important;border-color:#DC2626!important;}
+.choice.show-correct{background:#D1FAE5!important;border-color:#059669!important;}
+.choice.disabled{cursor:default;}
+.letter{font-weight:700;font-size:12px;min-width:18px;color:#64748B;padding-top:1px;flex-shrink:0;}
+.choice.correct .letter,.choice.show-correct .letter{color:#065F46;}
+.choice.wrong .letter{color:#991B1B;}
+.ctext{font-size:12px;line-height:1.5;color:#1E293B;}
+.submit-btn{background:#7C3AED;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;width:100%;}
+.submit-btn:disabled{background:#CBD5E1;cursor:default;}
+.exp-card{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:14px 16px;margin-bottom:12px;display:none;}
+.exp-card.show{display:block;}
+.exp-result{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-weight:700;font-size:13px;}
+.exp-result.right{color:#065F46;}
+.exp-result.wrong{color:#991B1B;}
+.exp-sect{font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 3px;}
+.exp-text{font-size:12px;line-height:1.65;color:#1E293B;}
+.ww-item{display:flex;gap:8px;margin-bottom:4px;}
+.ww-ltr{font-weight:700;font-size:11px;color:#DC2626;min-width:18px;flex-shrink:0;}
+.ww-txt{font-size:11px;color:#64748B;line-height:1.5;}
+.trap-box{background:#FFF7ED;border-left:3px solid #F97316;border-radius:0 6px 6px 0;padding:8px 12px;margin-top:8px;}
+.trap-lbl{font-size:10px;font-weight:700;color:#EA580C;text-transform:uppercase;margin-bottom:2px;}
+.trap-txt{font-size:11px;color:#7C2D12;line-height:1.5;}
+.next-btn{background:#0F766E;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:12px;font-weight:700;cursor:pointer;width:100%;margin-top:6px;}
+.next-btn:hover{background:#0D6A62;}
+#results{display:none;padding:14px 16px;}
+.res-hero{background:#7C3AED;border-radius:12px;padding:20px;color:#fff;text-align:center;margin-bottom:14px;}
+.res-score{font-size:44px;font-weight:800;}
+.res-sub{font-size:12px;opacity:.8;margin-top:4px;}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.res-card{background:#fff;border:1px solid #E2E8F0;border-radius:8px;padding:10px 12px;}
+.res-card-title{font-size:10px;color:#64748B;text-transform:uppercase;font-weight:700;margin-bottom:6px;}
+.topic-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.topic-name{font-size:11px;color:#334155;flex:1;}
+.topic-bar-bg{width:70px;background:#E2E8F0;border-radius:3px;height:6px;flex-shrink:0;}
+.topic-bar{border-radius:3px;height:6px;}
+.topic-pct{font-size:10px;color:#64748B;min-width:30px;text-align:right;}
+.review-btn{background:#7C3AED;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:12px;font-weight:700;cursor:pointer;width:100%;margin-bottom:8px;}
+.restart-btn{background:#fff;color:#7C3AED;border:1.5px solid #7C3AED;border-radius:8px;padding:9px 20px;font-size:12px;font-weight:700;cursor:pointer;width:100%;}
+#review{display:none;padding:14px 16px;}
+.rev-q{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.rev-q.cq{border-left:3px solid #059669;}
+.rev-q.wq{border-left:3px solid #DC2626;}
+.rev-tag{font-size:10px;font-weight:700;margin-bottom:4px;}
+.rev-tag.right{color:#065F46;}
+.rev-tag.wrong{color:#991B1B;}
+.rev-stem{font-size:11.5px;line-height:1.6;color:#334155;margin-bottom:5px;}
+.rev-ans{font-size:11px;color:#065F46;font-weight:600;}
+.rev-wrong{font-size:11px;color:#991B1B;}
+.back-btn{background:#fff;color:#7C3AED;border:1.5px solid #7C3AED;border-radius:8px;padding:9px 20px;font-size:12px;font-weight:700;cursor:pointer;width:100%;margin-top:10px;}
+</style>
+</head><body>
+
+<div class="hdr">
+  <div><div class="hdr-title">🫀 Cardio Exam 2 — Q-Bank</div><div class="hdr-sub">USMLE Step 1 Format · 40 Questions</div></div>
+  <div class="mode-btns">
+    <button class="mbtn active" id="tutorBtn" onclick="setMode('tutor')">Tutor</button>
+    <button class="mbtn" id="timedBtn" onclick="setMode('timed')">Timed</button>
+  </div>
+</div>
+
+<div id="dashboard">
+  <div class="stat-row">
+    <div class="stat"><div class="n" id="s-total">40</div><div class="l">Total Qs</div></div>
+    <div class="stat"><div class="n" id="s-done">0</div><div class="l">Attempted</div></div>
+    <div class="stat"><div class="n" id="s-correct" style="color:#059669">0</div><div class="l">Correct</div></div>
+    <div class="stat"><div class="n" id="s-flagged" style="color:#F97316">0</div><div class="l">Flagged</div></div>
+  </div>
+  <div class="filter-bar">
+    <label>Lecture:</label>
+    <button class="fbtn on" onclick="toggleFilter(this,'all')">All</button>
+    <button class="fbtn" onclick="toggleFilter(this,'Angina')">Angina</button>
+    <button class="fbtn" onclick="toggleFilter(this,'Lipids')">Lipids</button>
+    <button class="fbtn" onclick="toggleFilter(this,'HF')">Heart Failure</button>
+    <button class="fbtn" onclick="toggleFilter(this,'HTN')">HTN</button>
+    <button class="fbtn" onclick="toggleFilter(this,'Anticoag')">Anticoag</button>
+  </div>
+  <div class="filter-bar">
+    <label>Show:</label>
+    <button class="fbtn on" onclick="toggleShow(this,'all')">All</button>
+    <button class="fbtn" onclick="toggleShow(this,'unanswered')">Unanswered</button>
+    <button class="fbtn" onclick="toggleShow(this,'flagged')">Flagged</button>
+    <button class="fbtn" onclick="toggleShow(this,'wrong')">Incorrect</button>
+  </div>
+  <button class="start-btn" onclick="startQuiz()">▶ Start Practice Session</button>
+</div>
+
+<div id="quiz">
+  <div class="qbar">
+    <span class="qnum" id="qnum">Q 1 / 40</span>
+    <div class="qprog"><div class="qprog-fill" id="qpfill" style="width:2.5%"></div></div>
+    <div class="timer-box" id="timerBox" style="display:none">1:30</div>
+  </div>
+  <div class="tag-row" id="qtags"></div>
+  <div class="qcard">
+    <div class="qtext" id="qtext"></div>
+    <div class="choices" id="choices"></div>
+    <button class="submit-btn" id="submitBtn" disabled onclick="submitAnswer()">Submit Answer</button>
+  </div>
+  <div class="exp-card" id="expCard">
+    <div class="exp-result" id="expResult"></div>
+    <div class="exp-sect">Why the correct answer is right</div>
+    <div class="exp-text" id="expWhy"></div>
+    <div id="expWW"></div>
+    <div class="trap-box" id="trapBox">
+      <div class="trap-lbl">High-Yield Trap</div>
+      <div class="trap-txt" id="trapTxt"></div>
+    </div>
+    <button class="next-btn" onclick="nextQ()">Next Question →</button>
+  </div>
+</div>
+
+<div id="results"></div>
+<div id="review"></div>
+
+<script>
+var QS = (function(){
+var q = [];
+
+q.push({id:0,lec:"Angina",topic:"Nitrate MOA",trap:true,
+stem:"A 62-year-old man with stable angina takes sublingual nitroglycerin for an acute episode of chest pain. Five minutes later his chest pain resolves but he develops a throbbing headache and his heart rate increases from 68 to 92 bpm. Which of the following best explains the increase in heart rate?",
+choices:["Nitroglycerin directly activates cardiac beta-1 receptors","Venodilation reduces preload, lowering BP and triggering baroreceptor-mediated reflex sympathetic activation","Nitroglycerin blocks muscarinic receptors in the SA node","Direct activation of sympathetic chain ganglia by nitric oxide","Metabolic acidosis from residual ischemia stimulates the SA node"],
+correct:1,
+why:"Nitroglycerin releases NO which increases cGMP, causing venodilation and decreased preload. The resulting fall in venous return and BP activates baroreceptors, which trigger reflex sympathetic activation and a compensatory rise in heart rate. This reflex tachycardia is why beta-blockers are often added to nitrate therapy.",
+ww:["Nitroglycerin does not directly bind adrenergic receptors.","CORRECT — baroreceptor reflex from venodilation is the mechanism.","Nitroglycerin does not block muscarinic receptors; it acts via NO/cGMP.","NO does not directly stimulate sympathetic ganglia.","The chest pain resolved, indicating ischemia was relieved."],
+trapText:"Reflex tachycardia after nitrates is expected. The fix is NOT more nitrate — add a beta-blocker. Headache (meningeal vasodilation) is the most common ADR of nitrates."});
+
+q.push({id:1,lec:"Angina",topic:"Nitrate Tolerance",trap:true,
+stem:"A 67-year-old woman with stable angina has used a 24-hour nitroglycerin transdermal patch continuously for 3 weeks. She reports the medication no longer relieves her angina. Coronary angiography shows no new lesions. Which of the following best explains this finding?",
+choices:["Development of resistance mutations in vascular smooth muscle guanylate cyclase","Depletion of vascular sulfhydryl groups required for nitric oxide bioactivation","Downregulation of beta-adrenergic receptors from reflex sympathetic activation","Increased hepatic first-pass metabolism of nitroglycerin over time","Formation of neutralizing antibodies against nitroglycerin"],
+correct:1,
+why:"Nitrate tolerance results primarily from depletion of free sulfhydryl (-SH) groups in vascular smooth muscle. These groups are required for bioactivation of organic nitrates to NO. Continuous nitrate exposure exhausts the -SH pool, reducing NO generation and cGMP signaling. This is prevented by an 8-12 hour nitrate-free interval — such as removing the transdermal patch at night.",
+ww:["Guanylate cyclase mutations do not cause nitrate tolerance.","CORRECT — sulfhydryl depletion is the mechanism.","Beta-receptor downregulation is a mechanism for catecholamine tolerance, not nitrate tolerance.","Transdermal NTG bypasses first-pass metabolism; this does not increase over time.","Nitroglycerin is not immunogenic."],
+trapText:"Students confuse nitrate tolerance with opioid receptor downregulation. The mechanism is unique: sulfhydryl depletion. The fix is a nitrate-FREE interval, not dose reduction."});
+
+q.push({id:2,lec:"Angina",topic:"Variant Angina",trap:true,
+stem:"A 38-year-old woman has recurrent chest pain exclusively at rest, typically between 3-5 AM, resolving spontaneously. ECG during an episode shows transient ST-segment elevation in leads V2-V4 that normalizes completely. Coronary angiography is normal. Which of the following medications is CONTRAINDICATED?",
+choices:["Amlodipine","Diltiazem","Isosorbide mononitrate","Metoprolol","Nifedipine"],
+correct:3,
+why:"This is Prinzmetal (variant) angina: rest pain, transient ST elevation, normal coronary arteries. Beta-blockers including metoprolol are CONTRAINDICATED because they block beta-2-mediated coronary vasodilation while leaving alpha-adrenergic vasoconstriction unopposed, worsening vasospasm. CCBs and nitrates are first-line treatment.",
+ww:["Amlodipine (DHP CCB) is effective — relieves coronary vasospasm.","Diltiazem (non-DHP CCB) is first-line for variant angina.","Isosorbide mononitrate is effective — causes coronary vasodilation.","CORRECT — metoprolol is contraindicated (beta-2 block + unopposed alpha = more spasm).","Nifedipine (DHP CCB) is also effective."],
+trapText:"Normal coronary arteries + transient ST elevation at rest = Prinzmetal angina. Beta-blockers contraindicated. ST elevation (not depression) is the key ECG distinguishing feature."});
+
+q.push({id:3,lec:"Angina",topic:"CCB Drug Interaction",trap:true,
+stem:"A 55-year-old man with hypertension and stable angina is started on verapamil. He also takes digoxin for atrial fibrillation rate control. Two weeks later he presents with nausea, HR 44 bpm, and reports seeing yellow-green halos around lights. Which of the following best explains his presentation?",
+choices:["Verapamil directly causes bradycardia and visual disturbances via retinal calcium channel blockade","Verapamil inhibits P-glycoprotein, increasing digoxin levels and causing digoxin toxicity","Verapamil activates muscarinic receptors causing bradycardia and GI upset","Verapamil causes xanthopsia through its own L-type calcium channel effects in the lens","Verapamil inhibits CYP3A4, reducing digoxin metabolism"],
+correct:1,
+why:"Verapamil inhibits P-glycoprotein, a drug efflux transporter that normally limits digoxin absorption and promotes renal digoxin excretion. Blocking P-gp increases digoxin bioavailability and reduces its clearance, raising plasma levels. This causes digoxin toxicity: GI symptoms (nausea), cardiac toxicity (bradycardia/AV block), and the classic CNS/visual finding of yellow-green halos (xanthopsia).",
+ww:["Verapamil does not cause retinal calcium channel blockade or visual symptoms directly.","CORRECT — P-glycoprotein inhibition raises digoxin levels.","Verapamil is a calcium channel blocker, not a muscarinic agonist.","The yellow-green halos are caused by digoxin toxicity, not verapamil itself.","Digoxin is not primarily metabolized by CYP3A4; P-gp inhibition is the key interaction here."],
+trapText:"Verapamil + digoxin = classic interaction via P-glycoprotein inhibition. The yellow-green visual halos (xanthopsia) are a digoxin toxicity sign, not a verapamil effect."});
+
+q.push({id:4,lec:"Angina",topic:"Ranolazine Indication",trap:false,
+stem:"A 72-year-old woman with chronic stable angina has BP 88/56 mmHg and HR 52 bpm. She has been admitted twice for hemodynamic deterioration related to antihypertensive medications. Her cardiologist wishes to add an antianginal that will not further compromise her BP or heart rate. Which is most appropriate?",
+choices:["Metoprolol succinate","Verapamil","Ranolazine","Isosorbide mononitrate","Amlodipine"],
+correct:2,
+why:"Ranolazine inhibits the late inward sodium current (late INa) in cardiac cells, reducing intracellular sodium and calcium overload via the NCX exchanger. This decreases myocardial oxygen demand without any significant effect on heart rate or blood pressure — making it uniquely suitable for hemodynamically compromised patients who cannot tolerate other antianginals.",
+ww:["Metoprolol would further reduce HR from 52 bpm, risking hemodynamically significant bradycardia.","Verapamil has significant negative chronotropic and hypotensive effects — contraindicated here.","CORRECT — hemodynamically neutral antianginal.","Isosorbide mononitrate causes vasodilation and would further drop BP from 88/56 mmHg.","Amlodipine causes peripheral vasodilation and would worsen baseline hypotension."],
+trapText:"Ranolazine's defining feature: reduces MVO2 WITHOUT lowering HR or BP. Whenever a patient cannot tolerate other antianginals due to hemodynamic instability, ranolazine is the answer."});
+
+q.push({id:5,lec:"Angina",topic:"Safe Drug Combination",trap:true,
+stem:"A 58-year-old man with stable angina on metoprolol has breakthrough episodes. His cardiologist adds a calcium channel blocker. His resting HR is 56 bpm. Which CCB is most appropriate?",
+choices:["Verapamil","Diltiazem","Amlodipine","Nifedipine (short-acting)","Nicardipine"],
+correct:2,
+why:"When adding a CCB to a patient already on a beta-blocker, only a dihydropyridine CCB such as amlodipine is safe. Amlodipine acts on vascular smooth muscle to reduce afterload without affecting AV nodal conduction. Non-DHP CCBs (verapamil, diltiazem) both slow AV conduction — their combination with a beta-blocker produces additive bradycardia and AV block, which is especially dangerous with a resting HR already at 56 bpm.",
+ww:["Verapamil + metoprolol = life-threatening additive AV block/bradycardia.","Diltiazem + beta-blocker also risks complete heart block.","CORRECT — only DHP CCBs are safe to add to beta-blockers.","Short-acting nifedipine causes reflex tachycardia and is not recommended for stable angina.","Nicardipine is primarily IV formulation and not appropriate here."],
+trapText:"ONLY DHP CCBs (amlodipine) can be safely combined with beta-blockers. Non-DHP CCBs (verapamil, diltiazem) + beta-blockers = dangerous additive AV block. One of the most tested drug combos in cardiology."});
+
+q.push({id:6,lec:"Angina",topic:"Coronary Steal",trap:false,
+stem:"A 65-year-old man with coronary artery disease undergoes pharmacologic stress testing with IV dipyridamole because he cannot exercise. Shortly after infusion he develops ST depression in leads V3-V5. Which of the following best explains the mechanism of ischemia induction?",
+choices:["Dipyridamole increases myocardial oxygen demand by raising HR and BP","Dipyridamole preferentially dilates normal coronary vessels, diverting flow away from collateral-dependent stenotic territories","Dipyridamole blocks adenosine receptors causing paradoxical coronary vasospasm","Dipyridamole activates platelet aggregation causing transient microthrombi","Dipyridamole inhibits nitric oxide synthase, reducing endothelial vasodilation"],
+correct:1,
+why:"Dipyridamole inhibits adenosine deaminase, increasing endogenous adenosine and causing potent arteriolar vasodilation. Normal coronary vessels dilate extensively; stenotic vessels are already maximally dilated by autoregulation at rest and cannot respond further. This creates coronary steal: blood is preferentially diverted to normal territories, reducing perfusion pressure to collateral-dependent ischemic zones — revealing ischemia without increasing oxygen demand.",
+ww:["Dipyridamole does not significantly increase HR or BP; ischemia is caused by supply redistribution, not demand.","CORRECT — coronary steal via preferential dilation of normal vessels.","Dipyridamole increases (not blocks) adenosine signaling.","Dipyridamole actually inhibits platelet aggregation — it is an antiplatelet agent.","Dipyridamole does not inhibit eNOS."],
+trapText:"Coronary steal is about redistributing flow (stealing from stenotic zones), not increasing demand. Dipyridamole/adenosine uncover ischemia by supply-side steal."});
+
+q.push({id:7,lec:"Angina",topic:"Microvascular Angina",trap:true,
+stem:"A 51-year-old woman has 6 months of exertional chest pain. Stress test shows ST depression during exercise. Coronary angiography reveals smooth coronary arteries with no stenoses. Which statement best describes appropriate pharmacotherapy?",
+choices:["Long-acting nitrates are first-line and most effective for this condition","Beta-blockers, CCBs, or ranolazine are all reasonable options","Statins are contraindicated because her coronary arteries are normal","Aspirin alone is sufficient antianginal therapy","Coronary artery bypass grafting is indicated"],
+correct:1,
+why:"This is microvascular angina (cardiac syndrome X): exertional chest pain with objective ischemia on stress testing but normal epicardial coronaries, caused by microvascular endothelial dysfunction. Beta-blockers, calcium channel blockers, and ranolazine are all effective. Notably, nitrates are less effective in microvascular angina compared to epicardial coronary disease — they dilate large vessels but have less impact on microvascular dysfunction.",
+ww:["Nitrates are LESS effective in microvascular angina — not first-line.","CORRECT — beta-blockers, CCBs, and ranolazine all reasonable.","Statins have vascular benefits beyond LDL lowering; not contraindicated.","Aspirin is not an antianginal agent.","Normal coronary arteries means CABG is not indicated."],
+trapText:"Microvascular angina is the one exception where nitrates are LESS effective. For all other angina types nitrates work well. Key diagnosis: normal cath + positive stress test."});
+
+q.push({id:8,lec:"Lipids",topic:"Statin MOA",trap:false,
+stem:"A 56-year-old man with hypercholesterolemia is started on atorvastatin 40 mg/day. After 8 weeks his LDL drops from 190 to 95 mg/dL. Which of the following best explains the primary mechanism by which atorvastatin lowers serum LDL?",
+choices:["Decreased intestinal cholesterol absorption via NPC1L1 blockade","Inhibition of HMG-CoA reductase leading to compensatory upregulation of hepatic LDL receptors","Activation of lipoprotein lipase accelerating VLDL clearance","Prevention of PCSK9-mediated degradation of LDL receptors","Increased biliary excretion of cholesterol"],
+correct:1,
+why:"Statins inhibit HMG-CoA reductase, the rate-limiting enzyme in the mevalonate pathway. This reduces hepatic cholesterol synthesis, causing the liver to compensatorily upregulate LDL receptor expression on hepatocytes. More LDL receptors means greater clearance of LDL from the circulation. The receptor upregulation step is what actually produces the reduction in serum LDL.",
+ww:["NPC1L1 blockade is the mechanism of ezetimibe, not statins.","CORRECT — HMG-CoA reductase inhibition leads to upregulation of LDL receptors.","LPL activation is the mechanism of fibrates via PPARalpha, not statins.","Preventing PCSK9-mediated LDL-R degradation is the mechanism of PCSK9 inhibitors.","Bile acid sequestrants increase biliary BA excretion, not statins."],
+trapText:"Do not stop at 'inhibit HMG-CoA reductase.' Complete the chain: reduced intracellular cholesterol leads to compensatory LDL receptor upregulation — that is what lowers serum LDL."});
+
+q.push({id:9,lec:"Lipids",topic:"Statin-Fibrate Interaction",trap:true,
+stem:"A 61-year-old man on simvastatin 40 mg/day has gemfibrozil added for persistent hypertriglyceridemia. Three weeks later he presents with severe bilateral leg pain, tea-colored urine, CK of 15,400 U/L, and creatinine 3.1 mg/dL (baseline 0.9). Which of the following best explains this drug interaction?",
+choices:["Gemfibrozil activates PPARalpha, increasing statin accumulation","Gemfibrozil inhibits glucuronidation of simvastatin, increasing simvastatin plasma levels","Gemfibrozil directly damages mitochondria, potentiating statin myotoxicity","Gemfibrozil displaces simvastatin from albumin, increasing free drug concentration","Both drugs inhibit HMG-CoA reductase, causing additive toxicity"],
+correct:1,
+why:"Gemfibrozil inhibits UGT (UDP-glucuronosyltransferase) enzymes responsible for glucuronidation of statins. This pharmacokinetic interaction raises statin plasma levels dramatically, causing severe myopathy and rhabdomyolysis. Released myoglobin causes renal tubular toxicity and AKI (reflected by the tea-colored urine). If a fibrate must be combined with a statin, fenofibrate is preferred because it does NOT inhibit glucuronidation.",
+ww:["PPARalpha activation is how fibrates work; it does not increase statin levels.","CORRECT — glucuronidation inhibition raises statin plasma levels.","Gemfibrozil does not directly damage mitochondria; the mechanism is pharmacokinetic.","Statins are not significantly albumin-bound in a clinically meaningful way.","Fibrates and statins have different mechanisms; they are not additive on HMG-CoA reductase."],
+trapText:"Gemfibrozil = glucuronidation inhibitor = raises statin levels = rhabdomyolysis. Use FENOFIBRATE (not gemfibrozil) if a statin plus fibrate combination is required."});
+
+q.push({id:10,lec:"Lipids",topic:"Statin in Pregnancy",trap:true,
+stem:"A 33-year-old woman who is 14 weeks pregnant presents with LDL 218 mg/dL. She has no prior history of cardiovascular disease. Which is the most appropriate pharmacological treatment?",
+choices:["Atorvastatin 20 mg/day","Gemfibrozil 600 mg twice daily","Cholestyramine 4g twice daily","Ezetimibe 10 mg/day","Rosuvastatin 10 mg/day"],
+correct:2,
+why:"All statins are Category X and absolutely contraindicated in pregnancy. Bile acid sequestrants such as cholestyramine are not systemically absorbed and therefore cannot cross the placenta, making them safe in pregnancy. They are the drug of choice for LDL reduction during pregnancy. Ezetimibe's safety in pregnancy has not been established.",
+ww:["Atorvastatin is Category X — absolutely contraindicated in pregnancy.","Gemfibrozil is used for hypertriglyceridemia, not LDL; safety in pregnancy is not established.","CORRECT — bile acid sequestrants are not absorbed and are safe in pregnancy.","Ezetimibe safety in pregnancy is not established.","Rosuvastatin is Category X — absolutely contraindicated."],
+trapText:"Pregnancy + hypercholesterolemia = bile acid sequestrant. ALL statins are Category X. This is one of the most tested pregnancy pharmacology questions."});
+
+q.push({id:11,lec:"Lipids",topic:"Fibrate Adverse Effects",trap:false,
+stem:"A 52-year-old man with severe hypertriglyceridemia (TG 740 mg/dL) and a history of two episodes of acute pancreatitis is started on fenofibrate. Six months later ultrasound shows multiple small gallstones. Which best explains this finding?",
+choices:["Fenofibrate increases lithocholic acid synthesis causing stone precipitation","Fenofibrate activates PPARalpha, increasing biliary cholesterol secretion and bile supersaturation","Fenofibrate inhibits bile acid synthesis causing bile stasis and stone formation","Fenofibrate directly crystallizes in the gallbladder lumen","Fenofibrate reduces HDL, which normally solubilizes cholesterol in bile"],
+correct:1,
+why:"Fibrates activate PPARalpha which increases cholesterol secretion into bile without a proportional increase in bile acid synthesis. This supersaturates bile with cholesterol, promoting cholesterol gallstone formation. This is a recognized adverse effect of fibrate therapy.",
+ww:["Fibrates do not specifically increase lithocholic acid synthesis in a way that causes stones.","CORRECT — PPARalpha activation increases biliary cholesterol saturation.","Fibrates do not inhibit bile acid synthesis; they increase biliary cholesterol relative to bile acids.","Drugs do not crystallize in the gallbladder lumen in this manner.","Fibrates actually INCREASE HDL; this is a benefit, not a cause of gallstones."],
+trapText:"Fibrates cause cholelithiasis (gallstones) via increased biliary cholesterol saturation. This is a classic tested adverse effect — do not confuse with the beneficial effects (decreased TG, increased HDL)."});
+
+q.push({id:12,lec:"Lipids",topic:"PCSK9 Inhibitors",trap:false,
+stem:"A 48-year-old woman with heterozygous familial hypercholesterolemia and established ASCVD has been on atorvastatin 80 mg plus ezetimibe 10 mg for 2 years. Her LDL remains at 160 mg/dL (goal less than 70). What is the most appropriate next step?",
+choices:["Switch atorvastatin to rosuvastatin at equivalent intensity","Add fenofibrate for additional LDL reduction","Add colesevelam (bile acid sequestrant)","Add evolocumab (PCSK9 inhibitor)","Recommend dietary modification only"],
+correct:3,
+why:"The step-up approach for LDL lowering is: maximum-dose statin, then add ezetimibe, then add a PCSK9 inhibitor. This patient has completed steps one and two. Evolocumab is a monoclonal antibody against PCSK9 that prevents LDL receptor degradation, allowing more LDL-R to recycle to the cell surface and dramatically increasing LDL clearance by 50-60%. It is indicated in FH with established ASCVD not at goal on maximum statin plus ezetimibe.",
+ww:["Switching from atorvastatin to rosuvastatin at equivalent intensity will not significantly reduce LDL further.","Fenofibrate primarily lowers triglycerides with minimal LDL-lowering effect.","Colesevelam provides only 15-18% LDL reduction and is less potent than a PCSK9 inhibitor as the next step here.","CORRECT — next step in the step-up algorithm after statin plus ezetimibe.","Dietary modification alone cannot achieve the 90+ mg/dL additional LDL reduction needed."],
+trapText:"PCSK9 inhibitors are step 3 — never first-line. The algorithm is: max statin, then ezetimibe, then PCSK9 inhibitor. FH plus ASCVD plus still above goal is the classic indication."});
+
+q.push({id:13,lec:"Lipids",topic:"Secondary Dyslipidemia",trap:false,
+stem:"A 44-year-old woman presents for a routine checkup. Labs show LDL 198 mg/dL, TG 95 mg/dL, TSH 18.2 mIU/L (elevated), and free T4 0.4 ng/dL (low). She has no prior cardiac history. What is the most appropriate initial management of her elevated LDL?",
+choices:["Start high-intensity statin therapy immediately","Start bile acid sequestrant therapy","Treat the underlying hypothyroidism and recheck lipids in 3 months","Start ezetimibe to minimize drug interactions","Start fibrate therapy given TG of 95"],
+correct:2,
+why:"This patient has secondary hyperlipidemia from hypothyroidism. Hypothyroidism reduces LDL receptor expression and decreases LDL catabolism, causing elevated LDL. When a secondary cause is identified, the first step is treating that underlying cause. Thyroid replacement therapy may normalize lipids entirely, making statin therapy unnecessary.",
+ww:["Starting a statin before treating the underlying cause is premature.","Bile acid sequestrants do not address the root cause.","CORRECT — treat hypothyroidism first; lipids may normalize with thyroid replacement.","Ezetimibe does not address the underlying cause.","TG of 95 is normal — no fibrate indication; also does not address the cause."],
+trapText:"Always check for secondary causes before starting lipid drugs: hypothyroidism (elevated LDL), DM (elevated TG, low HDL), nephrotic syndrome (elevated LDL), obesity (elevated TG). Treat the cause first."});
+
+q.push({id:14,lec:"Lipids",topic:"Step-Up Approach",trap:true,
+stem:"A 55-year-old man with established ASCVD is on atorvastatin 80 mg/day. His LDL is 82 mg/dL and goal is less than 70 mg/dL. He tolerates atorvastatin well. What is the most appropriate next step?",
+choices:["Switch to rosuvastatin for greater LDL reduction","Add evolocumab (PCSK9 inhibitor) — most potent available option","Add ezetimibe 10 mg/day","Switch to combination atorvastatin/ezetimibe pill","Add gemfibrozil 600 mg twice daily"],
+correct:2,
+why:"The correct step-up sequence is: maximum-dose statin, then add ezetimibe, then add a PCSK9 inhibitor. Ezetimibe is the appropriate next step when a patient on maximum-dose statin has not reached their LDL goal. It provides an additional 18-25% LDL reduction via a complementary mechanism (intestinal absorption blockade vs. hepatic synthesis inhibition), and is oral, affordable, and well-tolerated.",
+ww:["Rosuvastatin is also high-intensity but provides equivalent LDL lowering to atorvastatin 80 mg; switching provides no meaningful additional benefit.","Evolocumab is step 3 — after ezetimibe. Skipping ezetimibe is not evidence-based.","CORRECT — ezetimibe is the appropriate next step in the algorithm.","Combination pills are an option but are not a separate step in the algorithm.","Gemfibrozil is for hypertriglyceridemia and is DANGEROUS with statins (rhabdomyolysis)."],
+trapText:"Never jump to a PCSK9 inhibitor before trying ezetimibe. The sequence is: max statin, then ezetimibe, then PCSK9 inhibitor. Also: never add gemfibrozil to a statin."});
+
+q.push({id:15,lec:"Lipids",topic:"Bile Acid Sequestrant Drug Interaction",trap:true,
+stem:"A 29-year-old pregnant woman on warfarin and levothyroxine develops hypercholesterolemia. Her physician starts cholestyramine. One month later her INR is 1.3 and she feels unusually fatigued. Which best explains both findings?",
+choices:["Cholestyramine induces CYP2C9, increasing warfarin metabolism","Cholestyramine and levothyroxine compete for the same albumin binding site","Cholestyramine nonspecifically binds warfarin and levothyroxine in the GI tract, reducing their absorption","Cholestyramine activates hepatic transporters that export warfarin into bile","Cholestyramine reduces fat-soluble vitamin K absorption, paradoxically reducing warfarin effect"],
+correct:2,
+why:"Bile acid sequestrants are anion exchange resins that nonspecifically bind negatively charged molecules in the GI tract, including warfarin, digoxin, levothyroxine, and fat-soluble vitamins (A, D, E, K). This reduces absorption of co-administered drugs, leading to subtherapeutic warfarin levels (low INR, clotting risk) and reduced levothyroxine absorption (fatigue from hypothyroidism). Prevention: take all other medications at least 1 hour before or 4 hours after cholestyramine.",
+ww:["Cholestyramine does not induce CYP2C9; it acts entirely within the GI lumen.","Albumin competition is not the mechanism; cholestyramine is not absorbed.","CORRECT — nonspecific GI drug binding reduces absorption of co-administered medications.","Cholestyramine is not absorbed and does not affect hepatic transporters.","Reduced vitamin K absorption would increase the warfarin effect (raise INR), not decrease it."],
+trapText:"Bile acid sequestrants bind drugs in the GI tract. The rule: take ALL other medications at least 1 hour BEFORE or 4 hours AFTER. Critical for warfarin, digoxin, levothyroxine, and fat-soluble vitamins."});
+
+q.push({id:16,lec:"HF",topic:"Beta-Blocker Paradox",trap:true,
+stem:"A 50-year-old man is diagnosed with HFrEF (EF 28%) after a viral illness. He is started on carvedilol 3.125 mg twice daily with plans to titrate upward. His wife asks why a drug that weakens heart contractions would be given for a weak heart. Which best explains this?",
+choices:["Carvedilol improves EF by increasing calcium influx during phase 2 of the cardiac action potential","Chronic sympathetic activation drives cardiac remodeling; carvedilol counteracts this, allowing gradual EF improvement over months","Carvedilol acts as a partial agonist at beta-1 receptors, providing mild positive inotropy at low doses","Carvedilol blocks alpha-1 receptors, reducing afterload to a degree that outweighs negative inotropy","Carvedilol improves diastolic filling by reducing heart rate, which is the primary mechanism of benefit in HFrEF"],
+correct:1,
+why:"This is the beta-blocker paradox in HFrEF. Acutely, beta-blockers reduce heart rate and contractility. But in HFrEF, the heart is chronically exposed to elevated catecholamines that drive pathological remodeling: hypertrophy, fibrosis, and apoptosis. By counteracting this chronic catecholamine excess, carvedilol allows reverse remodeling to occur over weeks to months, resulting in gradual improvement in EF. It must be started at low dose when the patient is euvolemic.",
+ww:["Carvedilol does not increase calcium influx; it blocks beta and alpha receptors.","CORRECT — reverse remodeling by counteracting chronic catecholamine toxicity.","Carvedilol is a pure antagonist with no partial agonist activity.","While alpha-1 blockade does reduce afterload, this alone does not explain the EF improvement seen in clinical trials.","Rate reduction contributes but the EF improvement comes from reverse remodeling of the myocardium."],
+trapText:"NEVER start a beta-blocker in acute decompensated HF. ONLY when euvolemic and hemodynamically stable. The paradox: negative inotrope that improves EF long-term via reverse remodeling."});
+
+q.push({id:17,lec:"HF",topic:"ARNI Washout",trap:true,
+stem:"A 63-year-old man with HFrEF on lisinopril, carvedilol, and spironolactone is being transitioned to sacubitril/valsartan. Lisinopril is stopped Monday morning and sacubitril/valsartan is started Monday evening (10 hours later). The next day the patient develops severe tongue and facial swelling requiring emergency intubation. Which best explains this?",
+choices:["Valsartan caused an IgE-mediated allergic reaction","Insufficient washout between ACE inhibitor and ARNI caused dual bradykinin accumulation, resulting in severe angioedema","Spironolactone-induced hyperkalemia caused arrhythmia and respiratory compromise","Sacubitril directly stimulates mast cell degranulation through neprilysin inhibition","Carvedilol combined with ARNI caused excessive bradycardia"],
+correct:1,
+why:"ACE inhibitors prevent bradykinin degradation (ACE normally degrades bradykinin). Sacubitril inhibits neprilysin, which also degrades bradykinin. Combining an ACEi with an ARNI without adequate washout creates double bradykinin accumulation, leading to massive vasodilation and increased vascular permeability — severe angioedema. A mandatory 36-hour washout period from ACEi is required before starting ARNI.",
+ww:["ACEi and ARNI angioedema is bradykinin-mediated, NOT IgE-mediated (no urticaria or pruritus).","CORRECT — dual bradykinin accumulation from insufficient washout.","Hyperkalemia does not cause tongue and facial swelling.","Sacubitril does not cause mast cell degranulation.","Bradycardia does not cause tongue swelling."],
+trapText:"36-HOUR WASHOUT between ACEi and ARNI is MANDATORY and absolute. ACE blocks bradykinin degradation from one side; neprilysin from another. Together they cause life-threatening angioedema."});
+
+q.push({id:18,lec:"HF",topic:"Digoxin Toxicity",trap:true,
+stem:"A 74-year-old woman with HFrEF and atrial fibrillation is on digoxin 0.25 mg/day and furosemide 40 mg/day. She presents with nausea, yellow-green visual halos, and HR 42 bpm. Digoxin level is 2.1 ng/mL. Potassium is 2.7 mEq/L. Which best explains why she developed toxicity?",
+choices:["She is on too high a dose — the therapeutic range for HF is 0.5-0.9 ng/mL","Furosemide caused hypokalemia, which reduces competition at the Na/K-ATPase binding site, potentiating digoxin toxicity","Furosemide increases renal blood flow, paradoxically enhancing digoxin excretion causing rebound toxicity","Atrial fibrillation sensitizes cardiac cells to digoxin","Age-related increase in plasma protein binding increased the free digoxin concentration"],
+correct:1,
+why:"Two mechanisms are present. First, the digoxin level (2.1 ng/mL) exceeds the HF therapeutic range of 0.5-0.9 ng/mL. Second, and more importantly mechanistically, furosemide caused hypokalemia (K+ 2.7). Potassium normally competes with digoxin for the same binding site on Na/K-ATPase. When potassium is low, digoxin has less competition, resulting in greater Na/K-ATPase inhibition and toxicity even at levels that might otherwise be tolerated. The classic triad: yellow-green halos (xanthopsia), bradycardia, and GI symptoms.",
+ww:["The level is supratherapeutic, but this choice does not explain the pharmacodynamic interaction with hypokalemia.","CORRECT — furosemide causes hypokalemia which potentiates digoxin binding at Na/K-ATPase.","Furosemide acts on the loop of Henle and does not paradoxically increase renal blood flow.","Afib does not specifically sensitize cardiac cells to digoxin in this pharmacodynamic way.","Digoxin is not significantly plasma protein-bound."],
+trapText:"Furosemide causes hypokalemia, which potentiates digoxin toxicity. Potassium and digoxin compete at the same Na/K-ATPase site. Low K+ = more digoxin binding = toxicity. Therapeutic range for HF is 0.5-0.9 ng/mL (NOT the old 1.0-2.0)."});
+
+q.push({id:19,lec:"HF",topic:"HF Drug Hierarchy",trap:false,
+stem:"A 58-year-old man with HFrEF (EF 32%) is on maximally tolerated ACE inhibitor, carvedilol, and furosemide. Which addition would most likely provide additional reduction in cardiovascular mortality?",
+choices:["Increase furosemide dose to target daily weight reduction","Add spironolactone 25 mg/day","Add digoxin 0.125 mg/day","Switch furosemide to torsemide for better bioavailability","Add amlodipine for afterload reduction"],
+correct:1,
+why:"The four pillars of HFrEF mortality reduction are: ACEi/ARB/ARNI, beta-blocker, MRA (spironolactone or eplerenone), and SGLT-2 inhibitor. This patient is on pillars one and two but is missing an MRA. Spironolactone blocks aldosterone-mediated cardiac fibrosis and remodeling, reducing mortality in HFrEF. Furosemide and digoxin improve symptoms only — neither reduces mortality.",
+ww:["Increasing furosemide improves symptoms but provides no mortality benefit in HFrEF.","CORRECT — spironolactone (MRA) is the third pillar of HFrEF mortality-reducing therapy.","Digoxin reduces hospitalizations but has NO mortality benefit in HFrEF.","Torsemide improves oral bioavailability but provides no mortality benefit over furosemide.","Amlodipine is safe in HFrEF but provides no mortality benefit."],
+trapText:"Diuretics and digoxin = symptom relief ONLY. Know all 4 pillars of HFrEF mortality reduction: ACEi/ARB/ARNI, beta-blocker (3 specific drugs), MRA, SGLT-2i."});
+
+q.push({id:20,lec:"HF",topic:"HFpEF Management",trap:false,
+stem:"A 71-year-old woman with hypertension, obesity, and type 2 diabetes presents with progressive dyspnea. Echocardiogram shows EF 58% with diastolic dysfunction and elevated filling pressures. Which medication has demonstrated reduction in HF hospitalizations and cardiovascular mortality specifically in this type of heart failure?",
+choices:["Sacubitril/valsartan","Carvedilol","Spironolactone","Empagliflozin","Digoxin"],
+correct:3,
+why:"HFpEF (preserved EF 50% or greater) has very limited proven pharmacotherapy. SGLT-2 inhibitors (empagliflozin, dapagliflozin) are the only drug class with demonstrated mortality and hospitalization reduction in both HFrEF AND HFpEF. The EMPEROR-Preserved trial established this benefit. Sacubitril/valsartan, carvedilol, and spironolactone are proven in HFrEF only. Digoxin has no mortality benefit in any form of heart failure.",
+ww:["Sacubitril/valsartan has evidence in HFrEF; the HFpEF data are not as robust and it is not the primary approved indication.","Carvedilol is proven in HFrEF only.","Spironolactone data in HFpEF (TOPCAT trial) were mixed; SGLT-2i have stronger evidence.","CORRECT — SGLT-2i are the only class proven in both HFrEF and HFpEF.","Digoxin has no mortality benefit in any form of HF."],
+trapText:"SGLT-2 inhibitors are UNIQUE — the only HF drug class with proven mortality benefit in BOTH HFrEF and HFpEF. All other proven HF drugs work only in HFrEF."});
+
+q.push({id:21,lec:"HF",topic:"Ivabradine",trap:true,
+stem:"A 58-year-old man with HFrEF (EF 30%) is on maximally tolerated metoprolol succinate, lisinopril, spironolactone, and furosemide. His resting heart rate is 76 bpm and he is in normal sinus rhythm. Which addition would most appropriately reduce his heart rate and improve his outcomes?",
+choices:["Increase metoprolol succinate beyond current maximum","Add verapamil to slow heart rate via AV nodal blockade","Add ivabradine to selectively reduce heart rate via SA node If current blockade","Add digoxin for its rate-slowing vagomimetic effect","Add carvedilol as a second beta-blocker"],
+correct:2,
+why:"Ivabradine selectively blocks the HCN channel (If, or funny current) in SA node pacemaker cells, reducing the rate of spontaneous phase 4 depolarization and thereby reducing heart rate. It has no effect on contractility, blood pressure, or AV conduction. It is indicated in HFrEF with heart rate at or above 70 bpm while in sinus rhythm on maximum tolerated beta-blocker, and has been shown to reduce HF hospitalizations.",
+ww:["The patient is already on maximum tolerated metoprolol — further increase is not possible.","Verapamil (non-DHP CCB) is CONTRAINDICATED in HFrEF — worsens systolic function.","CORRECT — ivabradine in sinus rhythm on maximum beta-blocker with HR 76.","Digoxin reduces HR via the AV node (vagomimetic) with no mortality benefit.","Two beta-blockers cannot be combined — metoprolol is already at maximum."],
+trapText:"Ivabradine ONLY works in sinus rhythm — it has ZERO effect in Afib (If is in the SA node, which is not driving ventricular rate in Afib). Verapamil in HFrEF is always a wrong answer."});
+
+q.push({id:22,lec:"HF",topic:"ADHF Management",trap:true,
+stem:"A 68-year-old man with HFrEF presents with acute dyspnea, bilateral crackles, and O2 saturation 84% on room air. BP is 162/98 mmHg, HR 108 bpm. Home medications include carvedilol and lisinopril. Which is the most appropriate immediate pharmacological intervention?",
+choices:["Increase carvedilol dose to control the heart rate","Start sacubitril/valsartan to improve cardiac remodeling","Administer IV furosemide 80 mg to relieve pulmonary congestion","Administer IV dobutamine for positive inotropic support","Add oral spironolactone 25 mg for fluid management"],
+correct:2,
+why:"This is acute decompensated HF with pulmonary edema. The immediate priority is relieving congestion. IV furosemide rapidly reduces preload through diuresis and also causes early venodilation before diuresis begins, improving pulmonary venous pressure and oxygenation. The patient has adequate blood pressure (162/98) so there is no indication for dobutamine.",
+ww:["Carvedilol must NOT be increased or initiated during ADHF — can precipitate cardiogenic shock.","Sacubitril/valsartan is long-term disease-modifying therapy, not for acute stabilization.","CORRECT — IV loop diuretic is immediate first-line in ADHF with pulmonary edema.","Dobutamine is reserved for cardiogenic SHOCK with low output and hypotension — not this patient with BP 162/98.","Oral spironolactone acts slowly and does not address acute pulmonary congestion."],
+trapText:"NEVER increase or start beta-blockers in ADHF. Dobutamine is for cardiogenic SHOCK (hypotension + low output), NOT for ADHF with preserved BP. IV furosemide is the immediate answer for acute pulmonary edema."});
+
+q.push({id:23,lec:"HF",topic:"Hydralazine/ISDN",trap:false,
+stem:"A 52-year-old Black man with HFrEF (EF 28%) is on maximally tolerated carvedilol, spironolactone, and dapagliflozin. He is intolerant of ACE inhibitors and ARBs due to bilateral renal artery stenosis. Which addition is most appropriate for additional mortality reduction?",
+choices:["Digoxin for positive inotropic support","Ivabradine for heart rate reduction","Hydralazine/isosorbide dinitrate combination","Loop diuretic dose increase","Amlodipine for afterload reduction"],
+correct:2,
+why:"Hydralazine (arteriolar vasodilator reducing afterload) combined with isosorbide dinitrate (venodilator reducing preload) provides complementary vasodilation. This combination has specific mortality benefit in Black patients with HFrEF (A-HeFT trial) and is also the appropriate alternative regimen when ACEi/ARB/ARNI cannot be used. Bilateral renal artery stenosis is a contraindication to ACEi/ARB, making hydralazine/ISDN the appropriate substitute.",
+ww:["Digoxin has no mortality benefit and provides symptom relief only.","Ivabradine reduces HR but does not substitute for RAAS blockade.","CORRECT — hydralazine/ISDN for ACEi/ARB-intolerant patients and Black patients.","Loop diuretics provide no mortality benefit.","Amlodipine provides no mortality benefit in HFrEF."],
+trapText:"Hydralazine/ISDN has two indications: (1) ACEi/ARB/ARNI-intolerant HFrEF, and (2) Black patients specifically — the A-HeFT trial showed added mortality benefit on top of standard therapy."});
+
+q.push({id:24,lec:"HF",topic:"MRA Adverse Effects",trap:false,
+stem:"A 47-year-old man with HFrEF started on spironolactone 25 mg/day in addition to lisinopril and metoprolol succinate develops bilateral breast tenderness and reduced sexual desire three months later. His potassium is 4.8 mEq/L. Which is the most appropriate management?",
+choices:["Reduce spironolactone to 12.5 mg/day","Discontinue spironolactone — these symptoms indicate decompensation","Switch to eplerenone, a selective MRA without sex hormone receptor activity","Add testosterone supplementation to counteract the anti-androgenic effects","Discontinue lisinopril as it is potentiating spironolactone side effects"],
+correct:2,
+why:"Spironolactone is a non-selective MRA that also blocks androgen and progesterone receptors, causing anti-androgenic side effects in men: gynecomastia, breast tenderness, impotence, and loss of libido. Eplerenone is a selective mineralocorticoid receptor antagonist with no sex hormone receptor activity. It provides equivalent HFrEF mortality benefit without these side effects.",
+ww:["Reducing the dose may partially reduce side effects but compromises therapeutic efficacy.","Gynecomastia and sexual dysfunction are drug side effects, not signs of cardiac decompensation.","CORRECT — eplerenone is the appropriate switch: same benefit, no sex hormone effects.","Testosterone supplementation is not an evidence-based approach here.","Lisinopril does not cause gynecomastia or sexual dysfunction."],
+trapText:"Gynecomastia on spironolactone: switch to EPLERENONE. Spironolactone = non-selective (blocks androgens/progesterone). Eplerenone = selective mineralocorticoid receptor only. Both provide equivalent HF benefit."});
+
+q.push({id:25,lec:"HTN",topic:"ACEi Angioedema",trap:true,
+stem:"A 54-year-old Black man who has been on lisinopril for 4 years presents to the ED with rapid swelling of his tongue and lips over the past 2 hours. He denies hives or pruritus. BP is 156/94 mmHg. He has never had an allergic reaction before. Which best explains this adverse drug reaction?",
+choices:["IgE-mediated type I hypersensitivity reaction to lisinopril as a hapten","Lisinopril-induced accumulation of bradykinin causing increased vascular permeability — not IgE-mediated","Complement activation leading to C1-esterase inhibitor deficiency","Lisinopril-induced histamine release from pharyngeal mast cells","A drug interaction between lisinopril and an unknown allergen"],
+correct:1,
+why:"ACEi-induced angioedema is bradykinin-mediated, not IgE-mediated. ACE normally degrades bradykinin; blocking ACE allows bradykinin to accumulate, which activates B2 receptors and increases vascular permeability. Key features distinguishing this from allergic angioedema: no urticaria and no pruritus, because the mechanism is pharmacological rather than IgE and mast cell activation. Black patients have a 2-4 times higher risk of ACEi angioedema.",
+ww:["ACEi angioedema is NOT IgE-mediated — it is a direct pharmacological effect of bradykinin accumulation.","CORRECT — bradykinin-mediated angioedema from ACE inhibition.","Hereditary angioedema involves C1-INH deficiency, but ACEi angioedema is bradykinin-mediated, not complement-mediated.","Lisinopril does not cause mast cell degranulation or histamine release.","This is a direct pharmacological effect of the ACEi, not a drug interaction."],
+trapText:"ACEi angioedema = BRADYKININ-mediated (NOT allergic/IgE). No urticaria. No pruritus. Black patients at higher risk. After ACEi angioedema: switch to ARB (low cross-reactivity). NEVER rechallenge with any ACEi."});
+
+q.push({id:26,lec:"HTN",topic:"Compelling Indications",trap:false,
+stem:"A 61-year-old man has BP 152/94 mmHg on two visits. He has type 2 diabetes with urine albumin-to-creatinine ratio of 320 mg/g (normal less than 30). His K+ is 4.3 mEq/L and creatinine is 1.2 mg/dL. The ALLHAT trial found chlorthalidone should be first-line for most uncomplicated hypertension. However, which antihypertensive should be chosen for this specific patient?",
+choices:["Chlorthalidone — consistent with ALLHAT for most patients","Amlodipine — reduces renal afferent arteriolar pressure via vasodilation","Lisinopril (ACE inhibitor) — reduces intraglomerular pressure and proteinuria via efferent arteriolar dilation","Metoprolol — reduces cardiac output and thus renal perfusion pressure","Propranolol — reduces renin release by blocking beta-1 receptors on JGA cells"],
+correct:2,
+why:"While ALLHAT supports thiazides for uncomplicated HTN, this patient has a compelling indication: diabetes with proteinuria (diabetic nephropathy). ACEi and ARBs are first-line in this setting because they block angiotensin II, which preferentially constricts the efferent arteriole. Blocking this constriction reduces intraglomerular pressure, decreases glomerular filtration of albumin, and slows CKD progression — a renoprotective effect independent of blood pressure lowering.",
+ww:["ALLHAT favors thiazides for UNCOMPLICATED HTN, but compelling indications override this general recommendation.","Amlodipine lacks the specific efferent arteriole mechanism that confers renoprotection in diabetic nephropathy.","CORRECT — ACEi/ARB reduces intraglomerular pressure and provides renoprotection.","Metoprolol has no specific renoprotective evidence in diabetic nephropathy.","Propranolol may reduce renin release but lacks proven renoprotective benefit in DM nephropathy."],
+trapText:"ALLHAT supports thiazides for UNCOMPLICATED HTN. But compelling indications override general guidelines. DM with proteinuria = ACEi or ARB first-line for renoprotection."});
+
+q.push({id:27,lec:"HTN",topic:"Clonidine Withdrawal",trap:true,
+stem:"A 49-year-old man on clonidine 0.2 mg twice daily abruptly stops taking his medication after running out on a Friday. On Monday he presents with severe headache, BP 198/118 mmHg, diaphoresis, and palpitations. He took no other medications over the weekend. Which best explains this presentation?",
+choices:["Rebound norepinephrine release from upregulated sympathetic receptors following sudden removal of central alpha-2 agonism","Adrenal insufficiency from chronic clonidine-mediated cortisol suppression","Development of pheochromocytoma triggered by clonidine cessation","ACE inhibitor rebound effect from sudden loss of clonidine-mediated renin suppression","Acute aortic dissection triggered by the BP elevation"],
+correct:0,
+why:"Clonidine is a central alpha-2 agonist that suppresses norepinephrine release from central sympathetic neurons. Chronic use leads to receptor upregulation and sensitization. Abrupt withdrawal removes this central inhibition, causing massive rebound norepinephrine release from upregulated receptors, producing a hypertensive crisis with an adrenergic surge (diaphoresis, palpitations, severe HTN). Treatment is to restart clonidine immediately or use IV labetalol.",
+ww:["CORRECT — rebound norepinephrine release from upregulated receptors.","Clonidine does not affect the hypothalamic-pituitary-adrenal axis.","Pheochromocytoma does not develop acutely in this manner.","Clonidine is not an ACE inhibitor and renin rebound is not the primary mechanism.","While hypertensive crisis can cause aortic dissection, that is not the explanation for the presentation itself."],
+trapText:"Clonidine must ALWAYS be tapered — NEVER stopped abruptly. Rebound HTN crisis can exceed pre-treatment levels. Classic: sympathetic surge (diaphoresis, palpitations, severe HTN) after missing doses."});
+
+q.push({id:28,lec:"HTN",topic:"HTN in Pregnancy",trap:true,
+stem:"A 29-year-old woman at 38 weeks gestation has BP 184/116 mmHg, 3+ proteinuria, and severe headache. Severe preeclampsia is diagnosed and delivery is being arranged. Which is the most appropriate acute IV antihypertensive?",
+choices:["IV sodium nitroprusside","IV enalaprilat (IV ACE inhibitor)","IV labetalol","IV furosemide for volume management","IV hydralazine as first-line per most recent guidelines"],
+correct:2,
+why:"IV labetalol is the first-line IV antihypertensive for hypertensive emergencies in pregnancy. As an alpha-1 plus beta-1 plus beta-2 blocker, it reduces both SVR and cardiac output, providing smooth BP reduction without reflex tachycardia. It is safe for the fetus at standard doses. IV hydralazine is an acceptable second-line alternative. Nitroprusside is absolutely contraindicated (cyanide toxicity to fetus). ACEi/ARBs are absolutely contraindicated in pregnancy.",
+ww:["Nitroprusside is CONTRAINDICATED in pregnancy — releases cyanide which crosses the placenta.","IV ACEi are CONTRAINDICATED in pregnancy — cause fetal renal agenesis and oligohydramnios.","CORRECT — IV labetalol is the first-line drug for HTN emergency in pregnancy.","Furosemide is not appropriate for acute BP control in preeclampsia and reduces intravascular volume.","IV hydralazine is acceptable second-line but IV labetalol is the preferred first-line agent."],
+trapText:"ACEi/ARBs and nitroprusside are ABSOLUTELY CONTRAINDICATED in pregnancy. IV labetalol is the drug of choice for hypertensive emergency in pregnancy. One of the highest-yield pregnancy pharmacology questions."});
+
+q.push({id:29,lec:"HTN",topic:"Alpha-Blocker First-Dose Effect",trap:false,
+stem:"A 63-year-old man with hypertension and BPH is prescribed doxazosin 1 mg at bedtime. His physician specifically instructs him to take the first dose at bedtime while sitting. Why?",
+choices:["Doxazosin causes sedation and must be taken at night","Alpha-1 blockade causes venous and arteriolar dilation leading to orthostatic hypotension that is most severe after the first dose — taking at bedtime minimizes this risk","Doxazosin inhibits nocturnal renin release, achieving maximum antihypertensive effect overnight","Doxazosin causes urinary frequency and must be taken at bedtime","Doxazosin is metabolized by CYP enzymes most active during sleep"],
+correct:1,
+why:"Alpha-1 blockers cause venous and arteriolar dilation, which reduces venous return and SVR. This can produce dramatic orthostatic hypotension, especially after the first dose — the 'first-dose phenomenon.' Taking the first dose at bedtime while lying down minimizes the risk of syncope from orthostatic hypotension on standing. Subsequent doses are better tolerated as the vascular system adapts.",
+ww:["Doxazosin does not cause significant sedation.","CORRECT — first-dose orthostatic hypotension is prevented by taking the initial dose supine at bedtime.","Doxazosin does not specifically inhibit nocturnal renin release.","Doxazosin reduces prostate smooth muscle tone and does not cause urinary frequency.","There is no clinically relevant CYP-based reason for bedtime dosing."],
+trapText:"First-dose phenomenon with alpha-1 blockers: start at LOW dose, take FIRST DOSE AT BEDTIME. This prevents orthostatic hypotension syncope. Classic board question about prazosin and doxazosin."});
+
+q.push({id:30,lec:"HTN",topic:"Thiazide Adverse Effects",trap:false,
+stem:"A 59-year-old man on hydrochlorothiazide 25 mg/day for 1 year presents with acute right first metatarsophalangeal joint pain and swelling. Uric acid is 9.4 mg/dL. He denies prior gout attacks. Which best explains the mechanism?",
+choices:["HCTZ directly inhibits uricase, blocking uric acid metabolism","Volume contraction from HCTZ increases proximal tubule reabsorption of uric acid (following sodium), causing hyperuricemia","HCTZ inhibits xanthine oxidase, increasing uric acid synthesis","HCTZ activates purine metabolism pathways generating excess uric acid","HCTZ directly deposits urate crystals in joints via synovial fluid excretion"],
+correct:1,
+why:"Thiazides cause mild volume depletion, which triggers compensatory increase in proximal tubular sodium reabsorption. Uric acid is co-transported with sodium in the proximal tubule, so increased sodium reabsorption leads to increased uric acid reabsorption as well, raising serum uric acid and precipitating gout in susceptible patients. This is an indirect mechanism via volume contraction.",
+ww:["Thiazides do not inhibit uricase; the mechanism is indirect via volume contraction.","CORRECT — volume contraction increases proximal tubule urate reabsorption.","Xanthine oxidase inhibition is the mechanism of allopurinol, not thiazides.","Thiazides do not activate purine metabolism pathways.","Drugs are not excreted into joints in clinically significant amounts."],
+trapText:"Thiazides cause hyperuricemia via volume contraction and increased proximal urate reabsorption (indirect). Contrast with thiazides' USEFUL effect on calcium: they INCREASE calcium reabsorption (useful in hypercalciuria and osteoporosis). Thiazides are CONTRAINDICATED in gout."});
+
+q.push({id:31,lec:"HTN",topic:"Drug-Induced Lupus",trap:false,
+stem:"A 54-year-old woman on hydralazine 100 mg three times daily for 18 months presents with joint pain, malar-like rash, pleuritic chest pain, and fatigue. Labs: ANA 1:640 (positive), anti-histone antibodies positive, anti-dsDNA antibodies negative. Which best describes this condition?",
+choices:["Idiopathic systemic lupus erythematosus triggered by hydralazine","Drug-induced lupus from hydralazine — ANA and anti-histone positive, anti-dsDNA typically negative","Hydralazine-induced SLE with renal involvement requiring immunosuppression","Procainamide-induced lupus misattributed to hydralazine","Reactive arthritis from hydralazine metabolites"],
+correct:1,
+why:"Hydralazine (and procainamide) cause drug-induced lupus erythematosus (DILE). The key serological distinction from idiopathic SLE is: ANA positive and anti-histone antibodies positive, but anti-dsDNA antibodies are NEGATIVE. Anti-dsDNA is highly specific for idiopathic SLE. Renal involvement is rare in DILE. The syndrome resolves after stopping hydralazine.",
+ww:["This is drug-induced lupus, not idiopathic SLE. Anti-dsDNA negativity is the key distinguishing feature.","CORRECT — drug-induced lupus with anti-histone positive and anti-dsDNA negative.","Renal involvement is rare in drug-induced lupus — it is a feature of idiopathic SLE.","Procainamide also causes DILE, but the patient here is on hydralazine.","This is a well-characterized drug side effect, not reactive arthritis."],
+trapText:"Drug-induced lupus (hydralazine, procainamide): ANA positive and anti-HISTONE positive but anti-dsDNA NEGATIVE. Idiopathic SLE: anti-dsDNA positive. Renal involvement rare in DILE. Resolves on stopping the drug."});
+
+q.push({id:32,lec:"HTN",topic:"CCB Selection for Rate Control",trap:false,
+stem:"A 66-year-old man with hypertension, mild COPD (FEV1/FVC 0.64), and newly diagnosed atrial fibrillation with rapid ventricular response (HR 132 bpm) needs both blood pressure control and rate control. Which antihypertensive is most appropriate?",
+choices:["Propranolol — nonselective beta-blockade for maximal rate and BP control","Metoprolol succinate — beta-1 selective with less bronchospasm risk","Amlodipine — provides both rate control and BP reduction","Diltiazem — non-DHP CCB providing rate control and BP reduction without bronchospasm","Hydralazine — reduces afterload and relieves rate-related ischemia"],
+correct:3,
+why:"This patient needs both BP control and Afib rate control, but COPD complicates beta-blocker use. Diltiazem is a non-DHP calcium channel blocker that slows AV nodal conduction (providing rate control in Afib) and reduces SVR (lowering BP). Critically, CCBs do not block beta-2 receptors and do not cause bronchoconstriction, making diltiazem safe in COPD.",
+ww:["Propranolol is nonselective — beta-2 blockade causes bronchoconstriction — avoid in COPD.","Metoprolol is beta-1 selective and safer than propranolol in COPD but still carries bronchospasm risk at therapeutic doses; diltiazem avoids this entirely.","Amlodipine (DHP CCB) has NO AV nodal effect — cannot rate-control Afib.","CORRECT — diltiazem provides rate control (AV nodal) and BP reduction without bronchospasm.","Hydralazine has no AV nodal effect and cannot control Afib rate."],
+trapText:"DHP CCBs (amlodipine) have NO AV nodal effect — cannot rate-control Afib. Non-DHP CCBs (diltiazem, verapamil) provide rate control AND BP reduction AND are safe in COPD."});
+
+q.push({id:33,lec:"Anticoag",topic:"HIT Type II",trap:true,
+stem:"A 58-year-old woman receiving unfractionated heparin prophylaxis after knee replacement has her platelet count fall from 280,000 to 106,000 on post-operative day 9. Doppler ultrasound shows a new femoral DVT. There is no other identifiable cause. Which is the most appropriate management?",
+choices:["Increase the heparin dose to achieve therapeutic aPTT for DVT treatment","Switch to enoxaparin (LMWH) for DVT treatment","Administer platelet transfusion then start anticoagulation","Discontinue heparin and initiate argatroban","Start warfarin immediately and discontinue heparin after 2 days"],
+correct:3,
+why:"This is classic HIT Type II: platelet count falling 50% or more on days 5-14 of heparin with paradoxical new thrombosis. The IgG antibodies against the heparin-PF4 complex activate platelets causing both thrombocytopenia and thrombosis. All heparin must be stopped immediately. Argatroban (a direct thrombin inhibitor that is not heparin-derived) is the appropriate replacement anticoagulant.",
+ww:["Increasing heparin WORSENS HIT — heparin is the cause of the immune reaction.","LMWH is CONTRAINDICATED in HIT — HIT antibodies cross-react with LMWH.","Platelet transfusions WORSEN thrombosis in HIT by providing more substrate for antibody-activated aggregation.","CORRECT — stop all heparin, start argatroban (non-heparin direct thrombin inhibitor).","Starting warfarin acutely in HIT depletes protein C first, causing paradoxical thrombosis and skin necrosis."],
+trapText:"HIT management: (1) Stop ALL heparin including LMWH, (2) Do NOT transfuse platelets — worsens thrombosis, (3) Do NOT start warfarin acutely — protein C depletion causes skin necrosis, (4) START argatroban or bivalirudin."});
+
+q.push({id:34,lec:"Anticoag",topic:"Warfarin Drug Interaction",trap:true,
+stem:"A 70-year-old man with non-valvular atrial fibrillation has been stable on warfarin (INR 2.2-2.8) for 14 months. Amiodarone is newly started for recurrent symptomatic Afib. Six weeks later his INR is 7.8 with significant bruising and hematuria. His warfarin dose is unchanged. Which best explains the supratherapeutic INR?",
+choices:["Amiodarone inhibits CYP2C9, reducing metabolism of the active S-enantiomer of warfarin","Amiodarone enhances vitamin K absorption, increasing warfarin sensitivity","Amiodarone activates CYP3A4, converting warfarin to a more potent metabolite","Amiodarone reduces platelet aggregation, potentiating the anticoagulant effect","Amiodarone-induced hypothyroidism is the primary explanation for the increased INR"],
+correct:0,
+why:"S-warfarin, the more pharmacologically active enantiomer, is metabolized primarily by CYP2C9. Amiodarone is a potent CYP2C9 inhibitor, reducing S-warfarin metabolism and raising warfarin plasma levels, leading to increased anticoagulant effect and elevated INR. Critically, amiodarone has an extremely long half-life of 40-55 days, so its CYP2C9 inhibitory effect persists for months after stopping it.",
+ww:["CORRECT — CYP2C9 inhibition raises S-warfarin levels.","Amiodarone does not enhance vitamin K absorption.","Amiodarone inhibits CYP enzymes; S-warfarin does not become more potent through CYP metabolism.","The interaction here is pharmacokinetic (raised warfarin levels), not a pharmacodynamic platelet effect.","While amiodarone can cause hypothyroidism which may increase warfarin sensitivity, the primary and most immediate mechanism is direct CYP2C9 inhibition."],
+trapText:"Amiodarone plus warfarin = CYP2C9 inhibition = raised INR = bleeding risk. The interaction persists for MONTHS after stopping amiodarone (half-life 40-55 days). Rifampin has the OPPOSITE effect: CYP2C9 induction lowers INR."});
+
+q.push({id:35,lec:"Anticoag",topic:"DOAC vs. Warfarin",trap:true,
+stem:"A 65-year-old woman with non-valvular atrial fibrillation and a recently implanted mechanical mitral valve asks to switch from warfarin to apixaban due to difficulty maintaining a therapeutic INR. Which is the most appropriate response?",
+choices:["Apixaban is appropriate — it provides equivalent stroke protection for mechanical valves","Dabigatran is preferred over other DOACs for mechanical valves due to its reversibility","Warfarin must be continued — all DOACs are contraindicated in mechanical heart valves","Rivaroxaban is the only DOAC with approved indication for mechanical valve anticoagulation","Transition to apixaban is reasonable given its favorable safety profile"],
+correct:2,
+why:"All DOACs are contraindicated in mechanical heart valves. The RE-ALIGN trial specifically tested dabigatran in mechanical valve patients and was stopped early due to significantly more thromboembolic events AND bleeding compared to warfarin. Warfarin remains the ONLY approved anticoagulant for mechanical heart valves. The INR goal for a mechanical mitral valve is typically 2.5-3.5.",
+ww:["Apixaban is NOT approved or safe for mechanical valves — contraindicated.","Dabigatran was specifically tested and found to be inferior in mechanical valve patients — the RE-ALIGN trial.","CORRECT — warfarin is the only approved anticoagulant for mechanical heart valves.","No DOAC has an approved indication for mechanical valves.","Transitioning a mechanical valve patient to apixaban could be life-threatening."],
+trapText:"Mechanical heart valves = WARFARIN ONLY. No DOAC is approved or safe. RE-ALIGN trial showed dabigatran inferior (more clots and bleeding). One of the most important anticoagulation distinctions on Step 1."});
+
+q.push({id:36,lec:"Anticoag",topic:"tPA Contraindications",trap:true,
+stem:"A 78-year-old woman wakes up from a nap with left hemiplegia and hemineglect — her husband states she was normal when she went to sleep 6 hours ago. CT head shows no hemorrhage. BP is 166/94 mmHg. She had a hemorrhagic stroke 10 months ago. Which is the most appropriate management?",
+choices:["Administer IV alteplase immediately — CT rules out current hemorrhage","Lower BP to less than 140/90 mmHg then administer IV alteplase","IV alteplase is contraindicated — give aspirin and arrange urgent neurology consultation","Administer IV alteplase within 3 hours — the window applies from nap onset","Administer systemic heparin as an alternative reperfusion strategy"],
+correct:2,
+why:"This patient has two absolute contraindications to IV tPA. First, prior intracranial hemorrhage is an absolute contraindication regardless of when it occurred (10 months ago is still an absolute CI). Second, this is a wake-up stroke: last known well equals when the patient went to sleep, making the minimum duration 6 hours — well outside the 4.5-hour window. A CT showing no hemorrhage addresses only current hemorrhage and does not override these contraindications.",
+ww:["Prior hemorrhagic stroke is an ABSOLUTE contraindication to tPA — CT findings do not override this.","BP 166/94 is below the tPA threshold of 185/110, so BP is not the limiting factor here.","CORRECT — two absolute contraindications: prior ICH and outside the 4.5-hour window.","The 4.5-hour window applies to confirmed onset time; wake-up strokes default to last known well (bedtime).","Systemic heparin is not an acute reperfusion strategy for ischemic stroke."],
+trapText:"Two separate traps: (1) Prior ICH = absolute contraindication to tPA regardless of how long ago. (2) Wake-up stroke: last known well = when patient went to sleep — minimum 6 hours = outside the window. CT ruling out current hemorrhage does NOT override either contraindication."});
+
+q.push({id:37,lec:"Anticoag",topic:"Clopidogrel Pharmacogenomics",trap:true,
+stem:"A 55-year-old man with coronary artery disease undergoes drug-eluting stent placement for NSTEMI and is prescribed aspirin plus clopidogrel. Six months later he suffers in-stent thrombosis. Pharmacogenomic testing shows he is a CYP2C19 poor metabolizer. Which best explains the thrombosis and what should the antiplatelet regimen be changed to?",
+choices:["Aspirin resistance from COX-1 polymorphism — switch to ticlopidine","Clopidogrel requires CYP2C19 activation — poor metabolizers produce insufficient active metabolite — switch to ticagrelor","Clopidogrel was absorbed too rapidly causing unpredictable levels — reduce the dose","Aspirin inactivated clopidogrel via CYP2C19 competition — switch to aspirin monotherapy","Clopidogrel overdose from impaired CYP2C19 metabolism — reduce the dose"],
+correct:1,
+why:"Clopidogrel is a prodrug requiring CYP2C19 hepatic activation to form its active thiol metabolite, which irreversibly blocks the P2Y12 receptor. CYP2C19 poor metabolizers cannot adequately activate clopidogrel, resulting in insufficient platelet inhibition and increased stent thrombosis risk. The FDA issued a black box warning for this interaction. Ticagrelor is direct-acting and does not require metabolic activation, making it effective regardless of CYP2C19 genotype.",
+ww:["COX-1 polymorphism affecting aspirin is possible but not the primary issue identified here.","CORRECT — CYP2C19 poor metabolizers under-activate clopidogrel; ticagrelor bypasses this.","Absorption rate is not the issue; hepatic CYP2C19 activation is the rate-limiting step.","Aspirin and clopidogrel do not competitively inhibit each other at CYP2C19.","CYP2C19 poor metabolizers produce LESS active drug (under-treatment), not more — reducing dose would worsen platelet inhibition."],
+trapText:"Clopidogrel = prodrug requiring CYP2C19 activation. Poor metabolizers = less active drug = less platelet inhibition = more thrombosis. Ticagrelor bypasses this: direct-acting, no prodrug. This is why ticagrelor is preferred in ACS over clopidogrel."});
+
+q.push({id:38,lec:"Anticoag",topic:"Warfarin Reversal",trap:false,
+stem:"A 72-year-old man on warfarin (INR 6.8) for mechanical mitral valve replacement presents with acute GI bleeding and hemodynamic instability (BP 88/60 mmHg, HR 118 bpm). Which is the most appropriate immediate intervention to reverse his anticoagulation?",
+choices:["Vitamin K 10 mg IV alone — most specific reversal for warfarin","Fresh frozen plasma alone — provides immediate factor replacement","4-factor prothrombin complex concentrate (PCC) plus vitamin K IV","Hold warfarin and allow natural metabolism over 2-3 days","Protamine sulfate IV — reversal agent for warfarin"],
+correct:2,
+why:"Life-threatening bleeding on warfarin requires the fastest and most complete reversal. 4-factor PCC contains factors II, VII, IX, and X plus protein C and S, providing immediate complete factor replacement and rapid INR correction within minutes. Vitamin K IV is added simultaneously to provide sustained factor synthesis (since PCC factors have short half-lives). FFP alone requires large volumes, takes time to prepare, and effect is transient. Vitamin K alone takes 12-24 hours — too slow for hemodynamic instability.",
+ww:["Vitamin K alone takes 12-24 hours to restore factor synthesis — far too slow for hemodynamically unstable active bleeding.","FFP provides factors immediately but requires large volumes, takes time, and effect is transient — insufficient alone for life-threatening bleeding.","CORRECT — 4-factor PCC plus vitamin K IV is the gold standard for life-threatening warfarin-related hemorrhage.","Waiting 2-3 days is inappropriate for hemodynamically unstable active hemorrhage.","Protamine sulfate reverses HEPARIN (UFH and partially LMWH) — NOT warfarin."],
+trapText:"Warfarin reversal hierarchy: minor bleeding = hold plus vitamin K oral; serious = FFP plus vitamin K IV; life-threatening = 4-FACTOR PCC plus vitamin K IV. Protamine reverses HEPARIN, NOT warfarin — a heavily tested distinction."});
+
+q.push({id:39,lec:"Anticoag",topic:"UFH vs LMWH in CKD",trap:false,
+stem:"A 68-year-old man with CKD stage 4 (GFR 22 mL/min) and atrial fibrillation presents with a new iliofemoral DVT requiring anticoagulation. He cannot take oral medications. Which is the most appropriate parenteral anticoagulant?",
+choices:["Enoxaparin at standard weight-based dosing","Enoxaparin at 50% of standard dose to account for renal clearance","Unfractionated heparin titrated to aPTT","Fondaparinux at standard dosing","Rivaroxaban via NG tube"],
+correct:2,
+why:"In severe renal failure (GFR less than 30 mL/min), LMWH such as enoxaparin accumulates because it is renally cleared, resulting in unpredictable and elevated drug levels and increased bleeding risk. UFH is cleared by the reticuloendothelial system and is not renally cleared, making it safe and predictable in CKD. It is monitored by aPTT and dose-adjusted accordingly. Fondaparinux is also renally cleared and is contraindicated in severe CKD.",
+ww:["Enoxaparin at standard dosing in GFR 22 mL/min leads to dangerous drug accumulation and bleeding.","Dose reduction of enoxaparin in severe CKD remains unreliable — UFH is the safer and preferred choice.","CORRECT — UFH is not renally cleared and is safe and predictable in CKD.","Fondaparinux is renally cleared and is contraindicated in GFR less than 30 mL/min.","Rivaroxaban is renally cleared and the patient cannot take oral medications — both issues preclude its use."],
+trapText:"Severe CKD (GFR less than 30) plus need for anticoagulation = UFH. UFH is cleared by the RES, not kidneys. Among DOACs, apixaban has the least renal clearance (~27%) but is still not ideal in severe CKD."});
+
+return q;
+})();
+
+var mode='tutor', activeFilter='all', showFilter='all';
+var session=[], idx=0, selected=null, submitted=false;
+var timerInterval=null, timeLeft=90;
+var results=[];
+var flagged=new Set();
+var answered=new Map();
+
+function setMode(m){
+  mode=m;
+  document.getElementById('tutorBtn').classList.toggle('active',m==='tutor');
+  document.getElementById('timedBtn').classList.toggle('active',m==='timed');
+}
+function toggleFilter(btn,val){
+  activeFilter=val;
+  document.querySelectorAll('.filter-bar')[0].querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+}
+function toggleShow(btn,val){
+  showFilter=val;
+  document.querySelectorAll('.filter-bar')[1].querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+}
+function getFiltered(){
+  return QS.filter(function(q){
+    if(activeFilter!=='all' && q.lec!==activeFilter) return false;
+    if(showFilter==='unanswered' && answered.has(q.id)) return false;
+    if(showFilter==='flagged' && !flagged.has(q.id)) return false;
+    if(showFilter==='wrong' && (!answered.has(q.id)||answered.get(q.id).correct)) return false;
+    return true;
+  });
+}
+function startQuiz(){
+  var pool=getFiltered();
+  if(!pool.length){alert('No questions match your filters.');return;}
+  session=pool.slice().sort(function(){return Math.random()-.5;});
+  idx=0; results=[];
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  document.getElementById('results').style.display='none';
+  document.getElementById('review').style.display='none';
+  renderQ();
+}
+function renderQ(){
+  var q=session[idx];
+  selected=null; submitted=false;
+  var sb=document.getElementById('submitBtn');
+  sb.disabled=true; sb.textContent='Submit Answer'; sb.onclick=submitAnswer;
+  document.getElementById('expCard').classList.remove('show');
+  document.getElementById('qnum').textContent='Q '+(idx+1)+' / '+session.length;
+  document.getElementById('qpfill').style.width=(((idx+1)/session.length)*100)+'%';
+  var trapTag=q.trap?'<span class="tag tag-trap">Trap</span>':'';
+  document.getElementById('qtags').innerHTML=
+    '<span class="tag tag-lec">'+q.lec+'</span><span class="tag tag-top">'+q.topic+'</span>'+trapTag+
+    '<button class="flag-btn" onclick="toggleFlag('+q.id+')">'+(flagged.has(q.id)?'⚑':'⚐')+'</button>';
+  document.getElementById('qtext').textContent=q.stem;
+  var letters=['A','B','C','D','E'];
+  document.getElementById('choices').innerHTML=q.choices.map(function(c,i){
+    return '<div class="choice" id="ch'+i+'" onclick="selectChoice('+i+')"><span class="letter">'+letters[i]+'</span><span class="ctext">'+c+'</span></div>';
+  }).join('');
+  if(mode==='timed'){
+    timeLeft=90;
+    document.getElementById('timerBox').style.display='block';
+    updateTimer();
+    if(timerInterval) clearInterval(timerInterval);
+    timerInterval=setInterval(function(){
+      timeLeft--;
+      updateTimer();
+      if(timeLeft<=0){clearInterval(timerInterval);if(!submitted){selected=-1;submitAnswer();}}
+    },1000);
+  } else {
+    document.getElementById('timerBox').style.display='none';
+    if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+  }
+}
+function updateTimer(){
+  var el=document.getElementById('timerBox');
+  var m=Math.floor(timeLeft/60), s=timeLeft%60;
+  el.textContent=m+':'+(s<10?'0':'')+s;
+  el.classList.toggle('warn',timeLeft<=20);
+}
+function selectChoice(i){
+  if(submitted) return;
+  selected=i;
+  document.querySelectorAll('.choice').forEach(function(c,j){c.classList.toggle('selected',j===i);});
+  document.getElementById('submitBtn').disabled=false;
+}
+function toggleFlag(id){
+  if(flagged.has(id)) flagged.delete(id); else flagged.add(id);
+  var fb=document.querySelector('.flag-btn');
+  document.getElementById('qtags').querySelector('.flag-btn').textContent=flagged.has(id)?'⚑':'⚐';
+  document.getElementById('s-flagged').textContent=flagged.size;
+}
+function submitAnswer(){
+  if(timerInterval) clearInterval(timerInterval);
+  var q=session[idx];
+  submitted=true;
+  var correct=(selected===q.correct);
+  answered.set(q.id,{correct:correct,selected:selected});
+  results.push({q:q,selected:selected,correct:correct});
+  updateStats();
+  var letters=['A','B','C','D','E'];
+  document.querySelectorAll('.choice').forEach(function(c,i){
+    c.classList.add('disabled');
+    if(i===q.correct) c.classList.add(selected===-1?'show-correct':'correct');
+    else if(i===selected && !correct) c.classList.add('wrong');
+  });
+  if(mode==='tutor') showExp(q,correct);
+  var sb=document.getElementById('submitBtn');
+  sb.textContent='Next Question \u2192'; sb.disabled=false; sb.onclick=nextQ;
+}
+function showExp(q,correct){
+  var letters=['A','B','C','D','E'];
+  document.getElementById('expCard').classList.add('show');
+  var er=document.getElementById('expResult');
+  er.className='exp-result '+(correct?'right':'wrong');
+  er.textContent=correct?'Correct!':'Incorrect \u2014 '+letters[q.correct]+' is correct';
+  document.getElementById('expWhy').textContent=q.why;
+  document.getElementById('trapTxt').textContent=q.trapText;
+  var wwHTML='<div class="exp-sect">Why each wrong answer is wrong</div>';
+  q.choices.forEach(function(c,i){
+    if(i===q.correct) return;
+    wwHTML+='<div class="ww-item"><span class="ww-ltr">'+letters[i]+'.</span><span class="ww-txt">'+q.ww[i]+'</span></div>';
+  });
+  document.getElementById('expWW').innerHTML=wwHTML;
+}
+function nextQ(){
+  idx++;
+  if(idx>=session.length){showResults();return;}
+  renderQ();
+  document.getElementById('expCard').classList.remove('show');
+  window.scrollTo(0,0);
+}
+function updateStats(){
+  var done=answered.size;
+  var correct=0; answered.forEach(function(v){if(v.correct) correct++;});
+  document.getElementById('s-done').textContent=done;
+  document.getElementById('s-correct').textContent=correct;
+}
+function showResults(){
+  document.getElementById('quiz').style.display='none';
+  var total=results.length;
+  var correct=results.filter(function(r){return r.correct;}).length;
+  var pct=Math.round((correct/total)*100);
+  var topics={};
+  results.forEach(function(r){
+    var k=r.q.lec;
+    if(!topics[k]) topics[k]={c:0,t:0};
+    topics[k].t++;
+    if(r.correct) topics[k].c++;
+  });
+  var topicHTML=Object.keys(topics).map(function(name){
+    var c=topics[name].c, t=topics[name].t;
+    var p=Math.round((c/t)*100);
+    var col=p>=80?'#059669':p>=60?'#D97706':'#DC2626';
+    return '<div class="topic-row"><span class="topic-name">'+name+'</span>'+
+      '<div class="topic-bar-bg"><div class="topic-bar" style="width:'+p+'%;background:'+col+'"></div></div>'+
+      '<span class="topic-pct">'+c+'/'+t+'</span></div>';
+  }).join('');
+  var emoji=pct>=80?'🏆':pct>=60?'📈':'📚';
+  var msg=pct>=80?'Excellent work!':pct>=60?'Good — review the misses!':'Keep at it — you\'ve got this!';
+  document.getElementById('results').style.display='block';
+  document.getElementById('results').innerHTML=
+    '<div class="res-hero"><div class="res-score">'+pct+'%</div><div style="font-size:20px;margin:4px 0">'+emoji+'</div>'+
+    '<div class="res-sub">'+correct+' / '+total+' correct &nbsp;&middot;&nbsp; '+msg+'</div></div>'+
+    '<div class="res-grid">'+
+    '<div class="res-card"><div class="res-card-title">By Lecture</div>'+topicHTML+'</div>'+
+    '<div class="res-card"><div class="res-card-title">Session Summary</div>'+
+    '<div class="topic-row"><span class="topic-name">Total</span><span class="topic-pct">'+total+'</span></div>'+
+    '<div class="topic-row"><span class="topic-name">Correct</span><span class="topic-pct" style="color:#059669">'+correct+'</span></div>'+
+    '<div class="topic-row"><span class="topic-name">Incorrect</span><span class="topic-pct" style="color:#DC2626">'+(total-correct)+'</span></div>'+
+    '<div class="topic-row"><span class="topic-name">Flagged</span><span class="topic-pct" style="color:#F97316">'+flagged.size+'</span></div>'+
+    '<div class="topic-row"><span class="topic-name">Mode</span><span class="topic-pct">'+(mode==='tutor'?'Tutor':'Timed')+'</span></div>'+
+    '</div></div>'+
+    '<button class="review-btn" onclick="showReview()">Review All Questions</button>'+
+    '<button class="restart-btn" onclick="backToDash()">Back to Dashboard</button>';
+}
+function showReview(){
+  document.getElementById('results').style.display='none';
+  document.getElementById('review').style.display='block';
+  var letters=['A','B','C','D','E'];
+  var html='<div style="font-size:13px;font-weight:700;margin-bottom:12px;">Question Review</div>';
+  results.forEach(function(r,i){
+    var q=r.q;
+    html+='<div class="rev-q '+(r.correct?'cq':'wq')+'">'+
+      '<div class="rev-tag '+(r.correct?'right':'wrong')+'">'+(r.correct?'CORRECT':'INCORRECT')+' &middot; Q'+(i+1)+' &middot; '+q.lec+' &middot; '+q.topic+'</div>'+
+      '<div class="rev-stem">'+q.stem.substring(0,160)+'...</div>'+
+      '<div class="rev-ans">Correct: ('+letters[q.correct]+') '+q.choices[q.correct]+'</div>'+
+      (!r.correct && r.selected>=0?'<div class="rev-wrong">Your answer: ('+letters[r.selected]+') '+q.choices[r.selected]+'</div>':'')+
+      (!r.correct && r.selected===-1?'<div class="rev-wrong">Time expired — unanswered</div>':'')+
+      '</div>';
+  });
+  html+='<button class="back-btn" onclick="backToResults()">Back to Results</button>';
+  document.getElementById('review').innerHTML=html;
+}
+function backToResults(){
+  document.getElementById('review').style.display='none';
+  document.getElementById('results').style.display='block';
+}
+function backToDash(){
+  document.getElementById('results').style.display='none';
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+  updateStats();
+}
+</script>
+</body></html>
