@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Anticoagulants / Antiplatelets — Georgetown SOM</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #f9fafb; color: #111; min-height: 100vh; }
+  :root {
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f3f4f6;
+    --color-text-primary: #111827;
+    --color-text-secondary: #6b7280;
+    --color-text-tertiary: #9ca3af;
+    --color-border-tertiary: #e5e7eb;
+    --color-border-secondary: #d1d5db;
+  }
+  * { scrollbar-width: thin; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+const T = {
+  purple: { bg: "#EEEDFE", txt: "#3C3489", bdr: "#534AB7" },
+  teal:   { bg: "#E1F5EE", txt: "#085041", bdr: "#0F6E56" },
+  coral:  { bg: "#FAECE7", txt: "#712B13", bdr: "#993C1D" },
+  blue:   { bg: "#E6F1FB", txt: "#0C447C", bdr: "#185FA5" },
+  amber:  { bg: "#FAEEDA", txt: "#633806", bdr: "#854F0B" },
+  green:  { bg: "#EAF3DE", txt: "#27500A", bdr: "#3B6D11" },
+  red:    { bg: "#FCEBEB", txt: "#791F1F", bdr: "#A32D2D" },
+  pink:   { bg: "#FBEAF0", txt: "#72243E", bdr: "#993556" },
+};
+
+const Pill = ({ text, color = "purple" }) => {
+  const c = T[color];
+  return <span style={{ background:c.bg, color:c.txt, border:`0.5px solid ${c.bdr}`, borderRadius:20, padding:"2px 10px", fontSize:12, fontWeight:500, display:"inline-block", marginRight:4, marginBottom:2 }}>{text}</span>;
+};
+const Lbl = ({ t }) => <p style={{ fontSize:11, fontWeight:500, color:"var(--color-text-tertiary)", textTransform:"uppercase", letterSpacing:"0.06em", margin:"8px 0 2px" }}>{t}</p>;
+const Card = ({ children, style }) => <div style={{ background:"var(--color-background-primary)", border:"0.5px solid var(--color-border-tertiary)", borderRadius:12, padding:"1rem 1.25rem", marginBottom:10, ...style }}>{children}</div>;
+const Inset = ({ children, color }) => {
+  const c = color ? T[color] : null;
+  return <div style={{ background: c ? c.bg : "var(--color-background-secondary)", borderRadius:8, padding:"10px 12px", marginTop:6 }}>{children}</div>;
+};
+
+const STUDY_TABS = [
+  { id:"angles",     label:"Testing Angles", icon:"🎯" },
+  { id:"mindmap",    label:"Mind Map",        icon:"🗺️" },
+  { id:"studyguide", label:"Study Guide",     icon:"📖" },
+  { id:"vignettes",  label:"Vignettes",       icon:"🏥" },
+  { id:"questions",  label:"Practice Qs",     icon:"❓" },
+  { id:"diagrams",   label:"Diagrams",        icon:"📊" },
+];
+
+const ANGLES = [
+  {
+    number:1, theme:"Hemostasis & Antiplatelet Therapies",
+    objectives:["LO1: Hemostasis from the perspective of therapeutic intervention","LO2: Pharmacology and indications for antiplatelet therapies"],
+    mechanism:"Hemostasis: (1) Primary — platelet plug formation (vascular injury → vWF → platelet adhesion → ADP/TXA₂ → aggregation). (2) Secondary — coagulation cascade → fibrin clot. Antiplatelets target primary hemostasis. Anticoagulants target secondary. Fibrinolytics dissolve formed clots.",
+    why_testable:"Step 1 tests drug selection by indication (ACS vs. DVT vs. stroke vs. mechanical valve) and mechanism-linked adverse effects/reversals",
+    angles:[
+      { title:"Aspirin MOA and clinical uses", tested_concept:"Aspirin: irreversibly inhibits COX-1 (and COX-2) → ↓ TXA₂ in platelets → ↓ aggregation. Irreversible → effect lasts platelet lifetime (7–10 days). Low dose (81 mg): antiplatelet. High dose: anti-inflammatory/analgesic.", vignette_pattern:"Patient with ACS or acute ischemic stroke — first drug given?", key_clues:"ACS: aspirin + P2Y12 inhibitor (dual antiplatelet therapy). Acute ischemic stroke: aspirin alone. Irreversible COX-1 inhibition — lasts 7–10 days (platelet lifetime).", trap:"Aspirin is NOT used in acute hemorrhagic stroke — only ischemic stroke. Also avoid in children with viral illness (Reye syndrome).", disciplines:"Pharmacology, Cardiology, Neurology" },
+      { title:"P2Y12 inhibitors: clopidogrel vs. ticagrelor", tested_concept:"Clopidogrel: prodrug → requires CYP2C19 activation → irreversible P2Y12 (ADP receptor) block. Ticagrelor: direct-acting (no prodrug), reversible P2Y12 block, faster onset. Both: ↓ platelet aggregation. Ticagrelor preferred in ACS (PLATO trial — superior outcomes vs. clopidogrel).", vignette_pattern:"Patient with NSTEMI — which P2Y12 inhibitor is preferred?", key_clues:"Ticagrelor preferred over clopidogrel in ACS (more consistent, no prodrug activation needed). CYP2C19 poor metabolizers → clopidogrel less effective.", trap:"Clopidogrel resistance from CYP2C19 loss-of-function polymorphism — ticagrelor bypasses this issue. Ticagrelor: dyspnea (unique ADR, non-bronchospasm mechanism).", disciplines:"Pharmacology, Cardiology, Pharmacogenomics" },
+    ]
+  },
+  {
+    number:2, theme:"Heparin-Derived Anticoagulants",
+    objectives:["LO2: Pharmacology and indications for heparin-derived anticoagulants"],
+    mechanism:"UFH (unfractionated heparin): binds antithrombin III (AT-III) → ↑ AT-III activity 1000x → inactivates thrombin (IIa) + Xa + IXa. Monitored by aPTT. Reversal: protamine sulfate. LMWH (enoxaparin): predominantly anti-Xa activity (less anti-IIa), more predictable PK, monitored by anti-Xa levels (not aPTT), partial reversal with protamine.",
+    why_testable:"Heparin-induced thrombocytopenia (HIT) is one of the highest-yield anticoagulation concepts on Step 1; UFH vs. LMWH differences are heavily tested",
+    angles:[
+      { title:"Heparin-induced thrombocytopenia (HIT)", tested_concept:"HIT Type II: immune-mediated — IgG antibodies against heparin-PF4 complex → platelet activation → THROMBOSIS (paradoxical) + thrombocytopenia. Platelets fall 50% from baseline, typically days 5–14. STOP heparin immediately. Switch to NON-heparin anticoagulant (argatroban, bivalirudin — direct thrombin inhibitors). Do NOT give warfarin acutely (worsens).", vignette_pattern:"Patient on heparin day 8 with new DVT and platelet count drop from 280 → 120 — what do you do?", key_clues:"HIT: platelets fall 50%+ on days 5–14 of heparin; paradoxical thrombosis; stop heparin; switch to argatroban or bivalirudin. Do NOT give platelet transfusions.", trap:"Giving warfarin for HIT acutely — warfarin depletes protein C/S first → paradoxical thrombosis. Must bridge with direct thrombin inhibitor first.", disciplines:"Pharmacology, Hematology, Immunology" },
+      { title:"UFH vs. LMWH: key clinical differences", tested_concept:"UFH: IV/SQ, short t½ (IV → reversible quickly), monitored by aPTT, full reversal with protamine, preferred in renal failure (not renally cleared) and when rapid reversal needed. LMWH (enoxaparin): SQ once/twice daily, more predictable, anti-Xa monitoring (not aPTT), renally cleared (adjust/avoid in CKD), partial reversal with protamine.", vignette_pattern:"Patient with DVT and severe CKD — UFH or LMWH?", key_clues:"CKD → use UFH (not renally cleared). Pregnant patient → LMWH preferred (doesn't cross placenta, warfarin does). Surgery reversal needed → UFH (fully reversible).", trap:"Giving LMWH in severe renal failure — enoxaparin accumulates → bleeding risk. Use UFH instead.", disciplines:"Pharmacology, Nephrology, Hematology" },
+    ]
+  },
+  {
+    number:3, theme:"Warfarin (Vitamin K Antagonist) & DOACs",
+    objectives:["LO2: Pharmacology and indications for vitamin K antagonists and direct thrombin inhibitors"],
+    mechanism:"Warfarin: inhibits vitamin K epoxide reductase → ↓ activation of factors II, VII, IX, X (and protein C, S). Monitor INR. Slow onset (days). Multiple drug interactions (CYP2C9). DOACs: dabigatran (direct thrombin/IIa inhibitor), apixaban/rivaroxaban/edoxaban (direct factor Xa inhibitors). Predictable PK, no routine monitoring, reversal agents available.",
+    why_testable:"Warfarin drug interactions, INR management, reversal strategies, and when to use warfarin vs. DOACs are all heavily tested Step 1 topics",
+    angles:[
+      { title:"Warfarin: MOA, drug interactions, reversal", tested_concept:"Warfarin inhibits VKOR → ↓ vitamin K-dependent factors (II, VII, IX, X, protein C, S). Factor VII shortest t½ → INR rises first. Narrow therapeutic window. Interactions: CYP2C9 inducers (rifampin → ↓ warfarin effect), inhibitors (amiodarone, fluconazole → ↑ warfarin, bleeding risk). Reversal: mild (hold warfarin, vitamin K PO); serious (FFP + vitamin K IV); life-threatening (4-factor PCC + vitamin K IV).", vignette_pattern:"Patient on warfarin started on amiodarone — INR rises to 8.0 with minor bleeding — what do you do?", key_clues:"Amiodarone inhibits CYP2C9 → ↑ warfarin levels → ↑ INR. Minor bleeding → hold warfarin + vitamin K. Major bleeding → PCC + vitamin K.", trap:"Using FFP alone without vitamin K — FFP provides factors immediately but effect is transient (factors degrade). Vitamin K restores sustained factor synthesis. For mechanical valves ONLY warfarin (not DOACs).", disciplines:"Pharmacology, Hematology, Cardiology" },
+      { title:"DOACs: dabigatran vs. Xa inhibitors; reversal agents", tested_concept:"Dabigatran (Pradaxa): direct thrombin (IIa) inhibitor. Reversal: idarucizumab (Praxbind) — specific antidote. Apixaban, rivaroxaban, edoxaban: direct factor Xa inhibitors. Reversal: andexanet alfa (for Xa inhibitors). All DOACs: no routine monitoring, predictable PK, renally cleared (dabigatran most). Preferred over warfarin for non-valvular Afib (RELY, ARISTOTLE, ROCKET-AF trials). Warfarin still required for mechanical heart valves.", vignette_pattern:"Patient on dabigatran presents with major bleeding — immediate reversal agent?", key_clues:"Dabigatran → idarucizumab. Xa inhibitors (apixaban, rivaroxaban) → andexanet alfa. All DOACs renally cleared — avoid in severe renal failure.", trap:"Using DOACs in patients with mechanical heart valves — only warfarin is approved for mechanical valves (RE-ALIGN trial showed dabigatran inferior with more thromboembolic and bleeding events).", disciplines:"Pharmacology, Hematology, Cardiology" },
+    ]
+  },
+  {
+    number:4, theme:"Fibrinolytic Agents & Indication-Based Drug Selection",
+    objectives:["LO2: Pharmacology and indications for fibrinolytic agents","LO1: Hemostasis from the perspective of therapeutic intervention"],
+    mechanism:"tPA (alteplase): recombinant tissue plasminogen activator → converts plasminogen → plasmin → dissolves fibrin clot. Used in: STEMI (if PCI unavailable), acute ischemic stroke (within 4.5 hrs), massive PE. Absolute contraindications: prior intracranial hemorrhage, active bleeding, recent CNS surgery, BP >185/110 (stroke), ischemic stroke >4.5 hours.",
+    why_testable:"Thrombolytic contraindications and the distinction between ischemic vs. hemorrhagic stroke treatment are high-yield Step 1 targets; indication-based selection from the drug table is directly tested",
+    angles:[
+      { title:"tPA: indications, contraindications, and timing", tested_concept:"Acute ischemic stroke: tPA within 4.5 hours of symptom onset (or last known well). Must rule out hemorrhagic stroke (CT first!). Contraindications: hemorrhagic stroke, recent surgery, active bleeding, severe HTN. STEMI: tPA if PCI not available within 120 min. Massive PE: systemic thrombolysis.", vignette_pattern:"72-year-old with sudden left hemiplegia, 2 hours ago — CT shows no hemorrhage — what do you give?", key_clues:"Ischemic stroke + <4.5 hrs + no hemorrhage on CT + no contraindications → tPA. CT must be done FIRST to rule out hemorrhage.", trap:"Giving tPA for hemorrhagic stroke — catastrophic. Always CT first. Also: aspirin in acute ischemic stroke (if tPA not given or after 24 hrs post-tPA); NOT antiplatelets + tPA together acutely.", disciplines:"Pharmacology, Neurology, Emergency Medicine" },
+      { title:"Indication-based drug selection summary", tested_concept:"DVT/PE/Afib (ppx): heparin/LMWH acutely → oral anticoagulant (warfarin or DOAC). Mechanical heart valves: warfarin ONLY. ACS: aspirin + P2Y12 inhibitor + IV/SQ anticoagulant. Acute ischemic stroke: aspirin (tPA if eligible). Afib stroke prevention: DOAC preferred over warfarin (unless mechanical valve).", vignette_pattern:"Patient with non-valvular Afib — warfarin or DOAC for stroke prevention?", key_clues:"Non-valvular Afib → DOAC preferred (easier dosing, no monitoring, less drug interactions, similar or better efficacy). Mechanical heart valves → warfarin (DOACs contraindicated).", trap:"Choosing a DOAC for a patient with a mechanical heart valve — only warfarin is safe and approved for mechanical valves.", disciplines:"Pharmacology, Cardiology, Hematology" },
+    ]
+  },
+];
+
+const MINDMAP = [
+  { number:1, theme:"Antiplatelet Drugs", objectives:["LO2 — Antiplatelet therapies"], mechanism:"Target primary hemostasis: ↓ platelet activation/aggregation. Act on COX-1 (aspirin), ADP receptor P2Y12 (clopidogrel, ticagrelor), or GP IIb/IIIa.", nodes:{ pathway:"Platelet activation: vascular injury → vWF → adhesion → TXA₂/ADP → aggregation. Drugs block these signals.", disease:"ACS (aspirin + P2Y12), acute ischemic stroke (aspirin), PCI (DAPT), secondary CV prevention", pharmacology:"Aspirin: irreversible COX-1 inhibition, lasts 7–10 days. Clopidogrel: prodrug (CYP2C19), irreversible P2Y12. Ticagrelor: direct, reversible P2Y12, faster onset.", clinical:"Aspirin: GI bleeding, Reye syndrome in children with viral illness. Clopidogrel: bleeding, CYP2C19 resistance. Ticagrelor: dyspnea (unique, non-bronchospastic), bleeding.", labs:"Bleeding time ↑ (platelet function). No routine drug level monitoring.", trap:"Aspirin irreversible — holds for platelet lifetime (7–10 days). Clopidogrel resistance from CYP2C19 poor metabolizer — ticagrelor unaffected. Aspirin NOT for hemorrhagic stroke." }, links:["Heparin (used together in ACS)","tPA (aspirin used post-tPA, not with it)"] },
+  { number:2, theme:"Unfractionated Heparin (UFH)", objectives:["LO2 — Heparin-derived anticoagulants"], mechanism:"Binds AT-III → 1000x ↑ AT-III activity → inactivates thrombin (IIa), Xa, IXa. Monitored by aPTT (1.5–2.5x normal).", nodes:{ pathway:"Heparin + AT-III → inactivates IIa (thrombin), Xa, IXa → ↓ fibrin formation", disease:"DVT/PE treatment, ACS, bridging therapy, intraoperative anticoagulation, hemodialysis", pharmacology:"IV or SQ. Short t½ (IV ~1 hr). NOT renally cleared (safe in CKD). Monitored by aPTT.", clinical:"Bleeding (main risk), HIT Type II (days 5–14: ↓ platelets + thrombosis — paradoxical!), osteoporosis (long-term)", labs:"aPTT (1.5–2.5× normal for anticoagulation). Platelet count monitoring (HIT).", trap:"HIT: stop heparin, switch to argatroban or bivalirudin. Do NOT give warfarin acutely in HIT. UFH preferred over LMWH in renal failure." }, links:["LMWH (alternative, less HIT risk)","Argatroban (switch to in HIT)","Warfarin (bridge to warfarin for chronic anticoagulation)"] },
+  { number:3, theme:"LMWH: Enoxaparin", objectives:["LO2 — Heparin-derived anticoagulants"], mechanism:"Primarily inhibits factor Xa (less anti-IIa than UFH). More predictable PK → fixed weight-based SQ dosing. Renally cleared.", nodes:{ pathway:"Binds AT-III → primarily inhibits Xa (minimal IIa inhibition) → ↓ fibrin formation", disease:"DVT/PE treatment and prophylaxis, ACS (with antiplatelet therapy), safe in pregnancy (doesn't cross placenta)", pharmacology:"SQ injection once or twice daily. Monitored by anti-Xa level (NOT aPTT). Renally cleared — AVOID in severe CKD (GFR <30).", clinical:"Bleeding, HIT (lower risk than UFH), injection site bruising. Partial reversal with protamine (protamine reverses anti-IIa > anti-Xa).", labs:"Anti-Xa levels if monitoring needed (pregnancy, obesity, renal impairment).", trap:"LMWH accumulates in renal failure → use UFH instead. Less HIT risk than UFH. Safe in pregnancy (unlike warfarin)." }, links:["UFH (use instead in severe CKD)","Warfarin (bridge from LMWH to warfarin)"] },
+  { number:4, theme:"Warfarin (VKA)", objectives:["LO2 — Vitamin K antagonists"], mechanism:"Inhibits vitamin K epoxide reductase (VKOR) → ↓ γ-carboxylation of factors II, VII, IX, X, protein C, S. Factor VII shortest t½ → INR rises first.", nodes:{ pathway:"↓ VKOR → ↓ reduced vitamin K → ↓ carboxylation of factors II, VII, IX, X, C, S → ↓ coagulation", disease:"Mechanical heart valves (ONLY anticoagulant approved), Afib (non-valvular — DOACs preferred), DVT/PE, antiphospholipid syndrome", pharmacology:"Oral, slow onset (2–5 days). Narrow TI. Monitored by INR (goal usually 2–3; mechanical valves 2.5–3.5). Many CYP2C9 drug interactions.", clinical:"Bleeding (main risk), teratogenic (Category X — crosses placenta → fetal warfarin syndrome), skin necrosis (protein C/S deficiency)", labs:"INR monitoring. Vitamin K dependent factors: PT/INR (extrinsic + common pathway).", trap:"Mechanical valves: ONLY warfarin (not DOACs). Teratogenic: use LMWH in pregnancy. Warfarin skin necrosis: protein C (shortest t½) depleted first in HIT transition." }, links:["DOACs (preferred for non-valvular Afib)","LMWH (bridge to warfarin, safe in pregnancy)","Vitamin K (reversal)"] },
+  { number:5, theme:"DOACs (Direct Oral Anticoagulants)", objectives:["LO2 — Direct thrombin inhibitors and Xa inhibitors"], mechanism:"Dabigatran: direct thrombin (IIa) inhibitor. Apixaban, rivaroxaban, edoxaban: direct factor Xa inhibitors. No vitamin K dependence → no routine monitoring, fewer interactions.", nodes:{ pathway:"Dabigatran: directly inhibits IIa (thrombin). Xa inhibitors: directly block Xa → ↓ thrombin generation → ↓ fibrin clot.", disease:"Non-valvular Afib (preferred over warfarin), DVT/PE treatment and prophylaxis. NOT for mechanical heart valves.", pharmacology:"All oral. Dabigatran: most renally cleared (80%) — most affected by CKD. Apixaban: least renal clearance (27%) — preferred in CKD. No routine monitoring.", clinical:"Bleeding (limited reversal options vs. warfarin). Dabigatran: GI upset (take with food). Renal dose adjustments required.", labs:"Routine monitoring NOT required. Anti-Xa (rivaroxaban/apixaban) or TT/dTT (dabigatran) if needed urgently.", trap:"DOACs contraindicated in mechanical heart valves. Dabigatran → idarucizumab (reversal). Xa inhibitors → andexanet alfa. Apixaban preferred in CKD (least renally cleared)." }, links:["Warfarin (mechanical valves: use warfarin instead)","UFH/LMWH (bridge acutely before DOAC therapeutic)"] },
+  { number:6, theme:"Fibrinolytics (tPA)", objectives:["LO2 — Fibrinolytic agents"], mechanism:"Alteplase (recombinant tPA) activates plasminogen → plasmin → degrades fibrin clot. Clot-specific at therapeutic doses.", nodes:{ pathway:"tPA → plasminogen → plasmin → fibrin degradation → clot dissolution. D-dimers ↑ (fibrin degradation products).", disease:"Acute ischemic stroke (within 4.5 hrs), STEMI (if PCI unavailable >120 min), massive PE with hemodynamic instability", pharmacology:"IV infusion. Short t½. Alteplase most common. Tenecteplase (bolus dosing, longer t½).", clinical:"Bleeding (major risk), intracranial hemorrhage (most feared). Contraindications: hemorrhagic stroke, active bleeding, recent surgery, severe HTN, prior ICH.", labs:"CT head (rule out hemorrhage before stroke tPA). PT/aPTT/fibrinogen monitoring. D-dimer ↑ expected.", trap:"tPA in hemorrhagic stroke = fatal. Always CT first. Do NOT give antiplatelet + tPA simultaneously in acute ischemic stroke (aspirin after 24 hrs post-tPA). Not for DVT routine treatment." }, links:["Aspirin (give after 24 hrs post-tPA in stroke)","Heparin (used with tPA in STEMI for patency)"] },
+];
+
+const STUDYGUIDE = [
+  { objectives:["LO2 — Antiplatelet therapies: aspirin and P2Y12 inhibitors"], mechanism:"Aspirin: irreversible COX-1 → ↓ TXA₂ → ↓ platelet aggregation (lasts 7–10 days). P2Y12 inhibitors: block ADP receptor → ↓ platelet activation.", high_yield_facts:["Aspirin: low dose (81 mg) = antiplatelet; irreversible effect lasts 7–10 days (platelet lifetime)","Clopidogrel: prodrug → CYP2C19 activation → irreversible P2Y12 block; reduced efficacy in CYP2C19 poor metabolizers","Ticagrelor: direct-acting (no prodrug), reversible P2Y12; preferred in ACS (PLATO trial)","Dual antiplatelet therapy (DAPT) = aspirin + P2Y12 inhibitor; standard post-ACS/PCI","Ticagrelor unique ADR: dyspnea (non-bronchospastic, mechanism unknown)","Aspirin + viral illness in children → Reye syndrome (avoid)"], vignette_clues:["ACS → aspirin + ticagrelor (or clopidogrel if ticagrelor unavailable/contraindicated)","Acute ischemic stroke → aspirin alone (if tPA not given or after 24 hrs post-tPA)","Pre-op antiplatelet hold: aspirin 7–10 days, clopidogrel 5–7 days before elective surgery"], trap:"Aspirin is NOT for hemorrhagic stroke — always determine stroke type (ischemic vs. hemorrhagic) before giving. Clopidogrel: CYP2C19 genetic resistance → ticagrelor preferred in high-risk ACS.", if_you_see:"ACS → DAPT (aspirin + ticagrelor). Ischemic stroke → aspirin. Dyspnea on P2Y12 inhibitor → ticagrelor ADR (switch to clopidogrel).", integration:["Pharm: COX-1, ADP/P2Y12 pathways","Cardiology: ACS management, DAPT duration","Neurology: acute ischemic stroke management"] },
+  { objectives:["LO2 — Heparin-derived anticoagulants: UFH and LMWH"], mechanism:"UFH: AT-III activator → inactivates IIa + Xa + IXa. LMWH: primarily anti-Xa. Both reversible with protamine (UFH fully, LMWH partially).", high_yield_facts:["UFH monitored by aPTT (1.5–2.5× normal). LMWH monitored by anti-Xa (not aPTT)","HIT Type II: immune IgG vs. heparin-PF4 → platelet activation → THROMBOSIS + thrombocytopenia (days 5–14)","HIT management: STOP heparin → start non-heparin anticoagulant (argatroban or bivalirudin)","UFH preferred in: renal failure (not renally cleared), when rapid reversal needed (protamine), hemodynamic instability","LMWH preferred in: pregnancy (safe — doesn't cross placenta), outpatient DVT, more predictable dosing","LMWH accumulates in CKD (renally cleared) → use UFH in severe renal failure (GFR <30)"], vignette_clues:["Heparin day 7 + platelet drop 50% + new DVT = HIT → stop heparin, start argatroban","Pregnant patient needs anticoagulation → LMWH (enoxaparin)","Renal failure + needs anticoagulation → UFH (not LMWH)","Reversal of UFH urgently needed → protamine sulfate"], trap:"HIT: do NOT give warfarin acutely (protein C/S depleted first → skin necrosis). Do NOT transfuse platelets. Switch to argatroban or bivalirudin.", if_you_see:"Platelet drop on heparin (days 5–14) + thrombosis → HIT → argatroban. CKD + anticoagulation → UFH.", integration:["Pharm: AT-III pathway, coagulation cascade","Hematology: HIT pathophysiology","Nephrology: renal dosing of anticoagulants"] },
+  { objectives:["LO2 — Warfarin, DOACs: MOA, monitoring, reversal, indications"], mechanism:"Warfarin: VKOR inhibition → ↓ factors II, VII, IX, X. DOACs: direct inhibition of IIa (dabigatran) or Xa (apixaban, rivaroxaban, edoxaban).", high_yield_facts:["Warfarin: factor VII shortest t½ → INR rises first; takes 2–5 days for full effect","Warfarin reversal: mild/no bleeding → hold + vitamin K PO; serious → FFP + vitamin K IV; life-threatening → 4-factor PCC + vitamin K IV","Warfarin: ONLY approved anticoagulant for mechanical heart valves (DOACs contraindicated)","Warfarin teratogenic (Category X) — use LMWH in pregnancy","DOACs: preferred over warfarin for non-valvular Afib (no monitoring, fewer interactions, equal/better efficacy)","Dabigatran reversal → idarucizumab; Xa inhibitor (apixaban, rivaroxaban) reversal → andexanet alfa","Apixaban preferred in CKD (27% renal clearance vs. dabigatran 80%)"], vignette_clues:["Mechanical heart valve → warfarin only (INR 2.5–3.5)","Non-valvular Afib → DOAC preferred over warfarin","Warfarin + amiodarone → ↑ INR (CYP2C9 inhibition by amiodarone)","Warfarin + rifampin → ↓ INR (CYP2C9 induction by rifampin)","Major bleeding on dabigatran → idarucizumab immediately"], trap:"DOACs CANNOT be used in mechanical heart valves — warfarin only. Warfarin skin necrosis in HIT: protein C depleted first (shortest t½ among vitamin K-dependent factors).", if_you_see:"Mechanical valve + need for anticoagulation → warfarin. Non-valvular Afib → DOAC. Major DOAC bleeding → specific reversal agent.", integration:["Pharm: vitamin K cycle, coagulation cascade","Cardiology: Afib management, mechanical valves","Pharm: CYP2C9 drug interactions with warfarin"] },
+  { objectives:["LO1, LO2 — Fibrinolytics (tPA): indications, contraindications, timing"], mechanism:"tPA (alteplase): converts plasminogen → plasmin → fibrin clot dissolution. Must rule out hemorrhage before use in stroke.", high_yield_facts:["Acute ischemic stroke: tPA within 4.5 hrs of symptom onset (or last known well time); CT head first to exclude hemorrhage","STEMI: tPA if primary PCI not available within 120 min of first medical contact","Massive PE with hemodynamic instability: systemic thrombolysis","Absolute contraindications: prior intracranial hemorrhage, active internal bleeding, recent (<3 months) intracranial surgery, ischemic stroke <3 months, BP >185/110 (for stroke)","After tPA in stroke: hold antiplatelets for 24 hours; then aspirin","D-dimer ↑ after tPA = expected (fibrin breakdown products)"], vignette_clues:["Ischemic stroke + <4.5 hrs + no hemorrhage on CT → tPA","STEMI + no cath lab available → tPA","Patient on tPA with new neurological deterioration → suspect intracranial hemorrhage","Do NOT give tPA if last known well time >4.5 hrs (stroke)"], trap:"tPA in hemorrhagic stroke = catastrophic. CT MUST be done first. Last known well time (not onset of symptoms recognition) determines eligibility — if unknown, conservative (do not give tPA).", if_you_see:"Acute ischemic stroke + <4.5 hrs + CT negative for hemorrhage → tPA. STEMI + PCI unavailable → tPA.", integration:["Pharm: plasminogen/plasmin pathway","Neurology: ischemic stroke management","Cardiology: STEMI reperfusion strategies"] },
+];
+
+const VIGNETTES = [
+  { number:1, cluster:"Heparin-Induced Thrombocytopenia (HIT)", objectives_tested:["LO2: Heparin-derived anticoagulants — HIT pathophysiology and management"], vignette:"A 67-year-old woman underwent total hip replacement 8 days ago and has been on unfractionated heparin prophylaxis since surgery. Today, her platelet count is 89,000/μL, down from 210,000/μL on admission. She is noted to have new swelling and pain in her left calf. Duplex ultrasound confirms a new DVT. Her temperature is 37.8°C. She has no other obvious causes of thrombocytopenia.", question:"Which of the following is the most appropriate immediate management for this patient?", answer:"Stop all heparin immediately and initiate a non-heparin anticoagulant such as argatroban (direct thrombin inhibitor) for treatment of the new DVT.", why_correct:"This patient has HIT Type II: platelet drop ≥50% from baseline on days 5–14 of heparin, with new paradoxical thrombosis (DVT). HIT is an immune-mediated condition (IgG against heparin-PF4 complex) causing platelet activation → thrombosis despite low platelet count. All heparin must be stopped. Argatroban (direct thrombin inhibitor, not heparin-derived) is the appropriate alternative.", key_clues:"Day 8 of heparin + platelet drop 50%+ + new thrombosis = classic HIT. Paradoxical thrombosis with thrombocytopenia is the hallmark.", why_missed:"Students may want to increase anticoagulation with more heparin (wrong — heparin is causing the problem) or give platelet transfusions (wrong — can worsen thrombosis in HIT).", trap:"Do NOT transfuse platelets in HIT. Do NOT switch to warfarin acutely (protein C/S depletion → skin necrosis/paradoxical thrombosis). The only correct move is heparin cessation + direct thrombin inhibitor." },
+  { number:2, cluster:"Warfarin Drug Interaction", objectives_tested:["LO2: Vitamin K antagonists — drug interactions and INR management"], vignette:"A 72-year-old man with non-valvular atrial fibrillation has been stable on warfarin with INR values consistently between 2.2 and 2.8 for 18 months. He is started on amiodarone for recurrent symptomatic Afib. Three weeks later, he presents with gross hematuria and his INR is 7.4. His warfarin dose has not been changed.", question:"Which of the following best explains this patient's supratherapeutic INR?", answer:"Amiodarone inhibits CYP2C9, which is responsible for warfarin (S-warfarin) metabolism, leading to decreased warfarin clearance and elevated plasma levels → ↑ anticoagulant effect → ↑ INR.", why_correct:"S-warfarin (the more potent enantiomer) is metabolized by CYP2C9. Amiodarone is a potent CYP2C9 inhibitor → ↑ warfarin levels → supratherapeutic INR. Additionally, amiodarone inhibits CYP2C9 even after stopping the drug (long t½ of amiodarone — months).", key_clues:"New amiodarone + previously stable warfarin + INR rise = CYP2C9 inhibition. Classic interaction. Management: hold warfarin, give vitamin K for serious bleeding, reduce warfarin dose on restart.", why_missed:"Students may attribute the INR rise to dietary changes or other factors without recognizing the amiodarone-CYP2C9 interaction. Amiodarone's effect on warfarin can persist for months after stopping.", trap:"Amiodarone's long half-life (40–55 days) means its CYP2C9 inhibitory effect persists for months — anticipate needing to reduce warfarin dose for a prolonged period after starting amiodarone." },
+  { number:3, cluster:"tPA in Acute Ischemic Stroke", objectives_tested:["LO2: Fibrinolytic agents — indications, contraindications, and timing for tPA"], vignette:"A 58-year-old right-handed man is brought to the ED with sudden onset right-sided weakness and expressive aphasia that began 2 hours ago. He has a history of hypertension (BP today 168/94 mmHg), type 2 diabetes, and no prior strokes. Non-contrast CT head shows no hemorrhage and no early ischemic changes. His blood glucose is 112 mg/dL. INR is 1.0. He takes aspirin 81 mg daily.", question:"Which of the following is the most appropriate next step in management?", answer:"Administer IV alteplase (tPA) — the patient meets criteria: acute ischemic stroke confirmed (CT negative for hemorrhage), within 4.5-hour window, BP <185/110, no absolute contraindications.", why_correct:"The patient has acute ischemic stroke with symptom onset 2 hours ago (within 4.5-hr window). CT excludes hemorrhagic stroke. BP is 168/94 (acceptable — can treat to <185/110 before tPA). No absolute contraindications. IV alteplase activates plasminogen → plasmin → dissolves fibrin clot → restores cerebral perfusion.", key_clues:"Ischemic stroke + <4.5 hrs + CT negative for hemorrhage + BP <185/110 + INR normal = tPA eligible. Aspirin must be held for 24 hours after tPA.", why_missed:"Students may hesitate because the patient is already on aspirin or because of his HTN — BP 168/94 is acceptable for tPA (threshold is 185/110). Daily aspirin use is NOT a contraindication to tPA.", trap:"The BP threshold for tPA in stroke is 185/110 (not 140/90). Aspirin is held 24 hours after tPA, not given with it. Always rule out hemorrhagic stroke by CT before tPA." },
+];
+
+const QUESTIONS = [
+  { number:1, cluster:"HIT Management", objectives_tested:["LO2: Heparin-derived anticoagulants — HIT Type II"], stem:"A 55-year-old man is hospitalized for community-acquired pneumonia and receives prophylactic unfractionated heparin. On hospital day 9, his platelet count drops from 240,000 to 95,000/μL. He develops a new right arm DVT confirmed by ultrasound. Which of the following is the most appropriate next step?", choices:{ A:"Increase heparin dose to provide therapeutic anticoagulation for the DVT", B:"Switch to enoxaparin (LMWH) to treat the DVT", C:"Administer platelet transfusion to address thrombocytopenia", D:"Discontinue heparin and initiate argatroban", E:"Start warfarin immediately and stop heparin" }, correct:"D", tested_concept:"HIT: stop all heparin, switch to non-heparin anticoagulant (argatroban or bivalirudin)", why_correct:"This is classic HIT Type II: platelet drop ≥50% on day 9 of heparin with paradoxical thrombosis. Heparin must be stopped immediately. Argatroban (direct thrombin inhibitor, not heparin-derived) is the appropriate replacement for anticoagulation.", why_wrong:{ A:"Increasing heparin will worsen HIT — the heparin is causing the immune reaction", B:"LMWH is also heparin-derived and cross-reacts with HIT antibodies — contraindicated", C:"Platelet transfusions can worsen thrombosis in HIT by providing more substrate for antibody-activated aggregation", E:"Starting warfarin acutely in HIT causes skin necrosis/warfarin necrosis by depleting protein C first before other factors — must bridge with argatroban first" }, trap:"LMWH is NOT safe in HIT — HIT antibodies cross-react with LMWH. Only truly non-heparin anticoagulants (argatroban, bivalirudin, fondaparinux) are safe." },
+  { number:2, cluster:"Warfarin vs. DOAC Selection", objectives_tested:["LO2: Vitamin K antagonists vs. direct thrombin inhibitors — appropriate drug selection"], stem:"A 68-year-old woman with non-valvular atrial fibrillation and a mechanical mitral valve replacement (placed 3 years ago) presents for anticoagulation management. She asks if she can switch from warfarin to apixaban because she has difficulty maintaining therapeutic INR. Which of the following is the most appropriate response?", choices:{ A:"Switch to apixaban — it provides equivalent stroke protection with less monitoring burden", B:"Switch to dabigatran — it has shown superior outcomes in mechanical valve patients", C:"Continue warfarin — DOACs are contraindicated in patients with mechanical heart valves", D:"Switch to rivaroxaban — it is the only DOAC approved for mechanical valves", E:"Discontinue anticoagulation — her mechanical valve makes anticoagulation too risky" }, correct:"C", tested_concept:"Mechanical heart valves require warfarin — DOACs are contraindicated", why_correct:"All DOACs are contraindicated in patients with mechanical heart valves. The RE-ALIGN trial (2013) tested dabigatran in mechanical valve patients and was stopped early due to excess thromboembolic events and bleeding. Warfarin remains the ONLY approved anticoagulant for mechanical heart valves.", why_wrong:{ A:"Apixaban is NOT approved for mechanical valves — contraindicated", B:"Dabigatran was specifically tested and shown to be INFERIOR (more thromboembolism and bleeding) in mechanical valve patients in the RE-ALIGN trial", D:"No DOAC is approved for mechanical valves", E:"Anticoagulation is mandatory for mechanical heart valves — the risk of valve thrombosis without it is life-threatening" }, trap:"This is a high-yield distinction: DOACs = fine for non-valvular Afib, DVT/PE. Mechanical heart valves = warfarin ONLY. The RE-ALIGN trial is the key evidence." },
+  { number:3, cluster:"tPA Contraindications", objectives_tested:["LO2: Fibrinolytic agents — contraindications to tPA in stroke"], stem:"A 75-year-old woman presents with acute onset left hemiplegia and hemineglect. Her last known well time was 5.5 hours ago. Non-contrast CT head shows no hemorrhage. Her BP is 172/96 mmHg, INR 1.1, and blood glucose is 140 mg/dL. Her past medical history includes a hemorrhagic stroke 8 months ago. Which of the following is the most appropriate management?", choices:{ A:"Administer IV alteplase immediately — CT is negative for hemorrhage", B:"Lower BP to <140/90, then administer IV alteplase", C:"IV alteplase is contraindicated — administer aspirin and arrange urgent neurology consultation", D:"Administer IV alteplase within 3 hours only — 5.5 hours is within range for tenecteplase", E:"Administer systemic heparin as an alternative to thrombolytics" }, correct:"C", tested_concept:"Contraindications to tPA: prior hemorrhagic stroke + symptom duration >4.5 hours both present", why_correct:"This patient has TWO absolute contraindications to IV tPA: (1) prior intracranial hemorrhage (8 months ago) — history of hemorrhagic stroke is an absolute contraindication regardless of timing, and (2) last known well time of 5.5 hours exceeds the 4.5-hour window for tPA. Aspirin and urgent neurology consultation are appropriate.", why_wrong:{ A:"CT negative for hemorrhage addresses current hemorrhage but prior hemorrhagic stroke is still a contraindication", B:"BP 172/96 is acceptable for tPA (threshold is 185/110), but the other contraindications remain", D:"The 4.5-hour window has passed, and prior hemorrhagic stroke is still a contraindication regardless of agent", E:"Systemic heparin is not an alternative to tPA in acute ischemic stroke" }, trap:"Two separate contraindications here — students may only catch one. Know both: (1) prior intracranial hemorrhage = absolute contraindication. (2) >4.5 hours from last known well = outside window." },
+  { number:4, cluster:"Clopidogrel Pharmacogenomics", objectives_tested:["LO2: Antiplatelet therapies — clopidogrel prodrug activation and genetic resistance"], stem:"A 54-year-old man with known coronary artery disease undergoes coronary stent placement for NSTEMI. He is started on dual antiplatelet therapy with aspirin and clopidogrel. Six months later, he suffers in-stent thrombosis. Pharmacogenomic testing reveals he is a CYP2C19 poor metabolizer. Which of the following best explains his in-stent thrombosis?", choices:{ A:"Aspirin irreversibly inhibits COX-2, reducing clopidogrel's effectiveness", B:"Poor CYP2C19 metabolizers cannot adequately convert clopidogrel to its active metabolite, resulting in insufficient P2Y12 inhibition", C:"Clopidogrel competitively inhibits CYP2C19, reducing its own activation over time", D:"CYP2C19 poor metabolizers have increased platelet sensitivity to ADP", E:"Poor metabolizers absorb clopidogrel more rapidly, leading to peak-and-trough effect" }, correct:"B", tested_concept:"Clopidogrel is a prodrug requiring CYP2C19 activation; poor metabolizers have reduced platelet inhibition → increased thrombotic risk", why_correct:"Clopidogrel is a prodrug that requires hepatic CYP2C19 activation to form its active metabolite, which then irreversibly blocks P2Y12. CYP2C19 poor metabolizers (15% of Caucasians, 30% of Asians) produce insufficient active metabolite → inadequate platelet inhibition → increased stent thrombosis risk. Ticagrelor is the preferred alternative (direct-acting, no prodrug activation).", why_wrong:{ A:"Aspirin inhibits COX-1/COX-2 but does not affect clopidogrel's metabolism or activation", C:"Clopidogrel does not inhibit CYP2C19 — it is a substrate, not an inhibitor", D:"ADP sensitivity is not altered by CYP2C19 status", E:"Absorption is not the issue — activation by CYP2C19 is the rate-limiting step" }, trap:"The FDA issued a black box warning for clopidogrel regarding CYP2C19 poor metabolizers. Ticagrelor avoids this issue — it is direct-acting and does not require metabolic activation." },
+  { number:5, cluster:"Anticoagulant Selection: Renal Failure", objectives_tested:["LO2: Heparin-derived anticoagulants — renal dosing considerations"], stem:"A 70-year-old man with a history of atrial fibrillation (non-valvular) and stage 4 CKD (GFR 22 mL/min) presents with a new DVT. He is currently not on anticoagulation. Which of the following anticoagulation strategies is most appropriate for acute management?", choices:{ A:"Enoxaparin (LMWH) at standard dosing", B:"Rivaroxaban at standard dosing", C:"Unfractionated heparin infusion titrated to aPTT", D:"Warfarin started immediately with no bridging", E:"Dabigatran at standard dosing" }, correct:"C", tested_concept:"Severe CKD: UFH preferred over LMWH and DOACs — UFH is not renally cleared", why_correct:"In severe renal failure (GFR <30), renally cleared anticoagulants accumulate and increase bleeding risk. UFH is primarily cleared by the reticuloendothelial system (not renally) → safe and predictable in renal failure. Monitored by aPTT.", why_wrong:{ A:"Enoxaparin (LMWH) is renally cleared — accumulates in CKD → bleeding risk. Contraindicated in GFR <30.", B:"Rivaroxaban is a Xa inhibitor with significant renal clearance — dose reduction or avoidance required in severe CKD", D:"Starting warfarin without bridging is inappropriate — warfarin takes 2–5 days to reach therapeutic levels, leaving the patient unprotected; bridging with UFH/LMWH is needed", E:"Dabigatran has ~80% renal clearance — most affected by CKD; contraindicated in severe renal failure" }, trap:"All DOACs are renally cleared to varying degrees. UFH is the safest option in severe CKD. Among DOACs, apixaban has the least renal clearance (27%) but is still not preferred in GFR <15–25." },
+];
+
+const DIAGRAMS = [
+  { title:"Drug Selection by Clinical Indication", type:"comparison", objectives:["LO1, LO2 — Hemostasis and indication-based drug selection"], content:`INDICATION           IV/SQ ANTICOAGULANT    ORAL ANTICOAGULANT     ANTIPLATELET    FIBRINOLYTIC\n─────────────────────────────────────────────────────────────────────────────────────────────────\nDVT / PE (acute)     Heparin or LMWH        Warfarin or DOAC       —               tPA if massive PE\n                     (bridge to oral)        (apixaban, rivarox,                    + hemodynamic\n                                             dabigatran, edoxaban)                  instability\n\nAfib (ppx)           Heparin/LMWH (bridge)  DOAC (preferred for    —               —\n                                             non-valvular Afib)\n                                             OR Warfarin\n\nMechanical           Heparin (bridge)        WARFARIN ONLY          —               —\nHeart Valves                                 (DOACs contraindicated)\n\nACS                  Heparin or LMWH        —                      Aspirin +        —\n                     (IV or SQ)                                     P2Y12 inhibitor\n\nAcute Ischemic       —                      —                      Aspirin          tPA (if <4.5 hrs)\nStroke` },
+  { title:"Coagulation Cascade & Drug Targets", type:"pathway", objectives:["LO1, LO2 — Hemostasis pathways and therapeutic intervention points"], content:`INTRINSIC PATHWAY          EXTRINSIC PATHWAY\nXII → XI → IX ─────────────── VII (activated by tissue factor)\n                 ↘           ↙\n                  X ← Xa inhibitors BLOCK here\n                  ↓    (apixaban, rivaroxaban, edoxaban)\n               Prothrombin (II)\n                  ↓    Direct thrombin inhibitors BLOCK here\n               Thrombin (IIa) ← (dabigatran, argatroban, bivalirudin)\n                  ↓\n               Fibrinogen → Fibrin → CLOT\n                                      ↑\n                               tPA → plasmin → dissolves fibrin\n\nHEPARIN: activates AT-III → inactivates IIa + Xa (+ IXa)\nWARFARIN: inhibits VKOR → ↓ activation of II, VII, IX, X\nASPIRIN: irreversible COX-1 → ↓ TXA₂ → ↓ platelet aggregation\nP2Y12 inhibitors: block ADP receptor → ↓ platelet aggregation` },
+  { title:"Anticoagulant Reversal Agents", type:"comparison", objectives:["LO2 — Reversal of anticoagulants"], content:`ANTICOAGULANT           REVERSAL AGENT              NOTES\n──────────────────────────────────────────────────────────────────────\nUFH (heparin)           Protamine sulfate           Full reversal\nLMWH (enoxaparin)       Protamine sulfate           Partial reversal (~60%)\nWarfarin (minor)        Vitamin K (PO)              + Hold warfarin\nWarfarin (serious)      FFP + Vitamin K IV          Immediate factor replacement\nWarfarin (life-threat.) 4-factor PCC + Vit K IV     Fastest, most complete\nDabigatran              Idarucizumab (Praxbind)     Specific monoclonal antidote\nApixaban / Rivaroxaban  Andexanet alfa              Recombinant Xa decoy` },
+  { title:"HIT: Pathophysiology and Management", type:"flowchart", objectives:["LO2 — Heparin-induced thrombocytopenia"], content:`HIT TYPE II MECHANISM:\n  Heparin + PF4 → complex → IgG antibodies form\n         ↓\n  IgG-heparin-PF4 binds FcγRIIA on platelets\n         ↓\n  Platelet ACTIVATION → consumption → ↓ platelet count\n         ↓                    ↓\n  Thrombocytopenia      Paradoxical THROMBOSIS\n  (≥50% fall, days 5-14)\n\nMANAGEMENT:\n  Suspect HIT? → STOP ALL heparin (including LMWH)\n         ↓\n  Start NON-HEPARIN anticoagulant:\n    Argatroban (preferred in renal failure)\n    Bivalirudin\n         ↓\n  When platelets recover → transition to warfarin/DOAC\n\nDO NOT:\n  ✗ Give platelet transfusions\n  ✗ Continue LMWH (cross-reacts)\n  ✗ Start warfarin acutely (skin necrosis)` },
+];
+
+function AnglesTab() {
+  return ANGLES.map((c,i) => (
+    <Card key={i}>
+      <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap", marginBottom:6 }}>
+        <Pill text={`Cluster ${c.number}`} color="purple"/>
+        <span style={{ fontWeight:500, fontSize:15 }}>{c.theme}</span>
+      </div>
+      {c.objectives.map((o,j) => <p key={j} style={{ margin:"0 0 2px", fontSize:13, color:"var(--color-text-secondary)", paddingLeft:10, borderLeft:"2px solid #AFA9EC" }}>{o}</p>)}
+      <Lbl t="Core mechanism"/><p style={{ fontSize:13, margin:"0 0 4px" }}>{c.mechanism}</p>
+      <p style={{ fontSize:12, color:"var(--color-text-secondary)", fontStyle:"italic", margin:"0 0 10px" }}>{c.why_testable}</p>
+      {c.angles.map((a,j) => (
+        <Inset key={j}>
+          <p style={{ fontWeight:500, fontSize:14, margin:"0 0 6px" }}>Angle {j+1}: {a.title}</p>
+          {[["Tested concept",a.tested_concept],["Vignette pattern",a.vignette_pattern],["Key clues",a.key_clues],["Common trap",a.trap],["Disciplines",a.disciplines]].map(([l,v]) =>
+            v ? <div key={l}><Lbl t={l}/><p style={{ fontSize:13, margin:"0 0 4px" }}>{v}</p></div> : null
+          )}
+        </Inset>
+      ))}
+    </Card>
+  ));
+}
+
+function MindMapTab() {
+  return MINDMAP.map((c,i) => (
+    <Card key={i}>
+      <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap", marginBottom:6 }}>
+        <Pill text={`Cluster ${c.number}`} color="teal"/>
+        <span style={{ fontWeight:500, fontSize:15 }}>{c.theme}</span>
+      </div>
+      <p style={{ fontSize:13, color:"var(--color-text-secondary)", margin:"0 0 8px", paddingLeft:10, borderLeft:"2px solid #5DCAA5", fontStyle:"italic" }}>{c.mechanism}</p>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(140px,1fr))", gap:8, marginBottom:8 }}>
+        {Object.entries(c.nodes).filter(([,v])=>v).map(([k,v]) => (
+          <div key={k} style={{ background:"var(--color-background-secondary)", borderRadius:8, padding:"8px 10px" }}>
+            <Lbl t={k}/><p style={{ fontSize:12, margin:0 }}>{v}</p>
+          </div>
+        ))}
+      </div>
+      <Lbl t="Links to"/>{c.links.map((l,j) => <Pill key={j} text={l} color="teal"/>)}
+    </Card>
+  ));
+}
+
+function StudyGuideTab() {
+  return STUDYGUIDE.map((s,i) => (
+    <Card key={i}>
+      <Lbl t="Objectives covered"/>
+      {s.objectives.map((o,j) => <p key={j} style={{ fontSize:13, color:"var(--color-text-secondary)", margin:"0 0 2px", paddingLeft:10, borderLeft:"2px solid #7F77DD" }}>{o}</p>)}
+      <Lbl t="Core mechanism"/><p style={{ fontSize:14, fontWeight:500, margin:"0 0 8px" }}>{s.mechanism}</p>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+        <div><Lbl t="High-yield facts"/>{s.high_yield_facts.map((f,j) => <p key={j} style={{ fontSize:13, margin:"0 0 3px" }}>• {f}</p>)}</div>
+        <div><Lbl t="Vignette clues"/>{s.vignette_clues.map((f,j) => <p key={j} style={{ fontSize:13, margin:"0 0 3px" }}>• {f}</p>)}</div>
+      </div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginTop:8 }}>
+        <div style={{ background:T.coral.bg, borderRadius:8, padding:"8px 10px" }}><Lbl t="Common trap"/><p style={{ fontSize:13, color:T.coral.txt, margin:0 }}>{s.trap}</p></div>
+        <div style={{ background:T.teal.bg, borderRadius:8, padding:"8px 10px" }}><Lbl t="If you see → think"/><p style={{ fontSize:13, color:T.teal.txt, margin:0 }}>{s.if_you_see}</p></div>
+      </div>
+      <Lbl t="Integration links"/>{s.integration.map((l,j) => <Pill key={j} text={l} color="blue"/>)}
+    </Card>
+  ));
+}
+
+function VignettesTab() {
+  const [open, setOpen] = useState({});
+  return VIGNETTES.map((v,i) => (
+    <Card key={i}>
+      <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:8 }}>
+        <Pill text={`Vignette ${v.number}`} color="blue"/><Pill text={v.cluster} color="purple"/>
+      </div>
+      <Inset><p style={{ fontSize:13, lineHeight:1.7, margin:"0 0 8px" }}>{v.vignette}</p><p style={{ fontSize:14, fontWeight:500, margin:0 }}>{v.question}</p></Inset>
+      <button onClick={()=>setOpen(o=>({...o,[i]:!o[i]}))} style={{ marginTop:10, fontSize:13, padding:"6px 14px", cursor:"pointer", borderRadius:6, background:"transparent", border:"0.5px solid var(--color-border-secondary)", color:"var(--color-text-primary)" }}>
+        {open[i]?"Hide answer ↑":"Show answer ↓"}
+      </button>
+      {open[i] && (
+        <div style={{ marginTop:8 }}>
+          <div style={{ background:T.green.bg, borderRadius:8, padding:"8px 12px", marginBottom:8 }}>
+            <Lbl t="Correct answer"/><p style={{ fontSize:13, fontWeight:500, color:T.green.txt, margin:0 }}>{v.answer}</p>
+          </div>
+          {[["Why correct",v.why_correct],["Key clues",v.key_clues],["Why a student might miss it",v.why_missed],["Exam writer trap",v.trap]].map(([l,val]) =>
+            val ? <div key={l}><Lbl t={l}/><p style={{ fontSize:13, margin:"0 0 6px" }}>{val}</p></div> : null
+          )}
+        </div>
+      )}
+    </Card>
+  ));
+}
+
+function QuestionsTab() {
+  const [sel, setSel] = useState({});
+  const [shown, setShown] = useState({});
+  return QUESTIONS.map((q,i) => (
+    <Card key={i}>
+      <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:6 }}>
+        <Pill text={`Q${q.number}`} color="amber"/><Pill text={q.cluster} color="amber"/>
+      </div>
+      <p style={{ fontSize:14, lineHeight:1.7, margin:"10px 0" }}>{q.stem}</p>
+      {Object.entries(q.choices).map(([letter,txt]) => {
+        const picked=sel[i]===letter, revealed=shown[i], isCorrect=letter===q.correct;
+        let bg="var(--color-background-secondary)", border="0.5px solid var(--color-border-tertiary)";
+        if(!revealed&&picked){bg=T.blue.bg;border=`0.5px solid ${T.blue.bdr}`;}
+        if(revealed&&isCorrect){bg=T.green.bg;border=`0.5px solid ${T.green.bdr}`;}
+        if(revealed&&picked&&!isCorrect){bg=T.red.bg;border=`0.5px solid ${T.red.bdr}`;}
+        return <div key={letter} onClick={()=>!revealed&&setSel(s=>({...s,[i]:letter}))} style={{ background:bg, border, borderRadius:8, padding:"8px 12px", marginBottom:4, cursor:revealed?"default":"pointer", display:"flex", gap:10 }}>
+          <span style={{ fontWeight:500, fontSize:13, minWidth:16 }}>{letter}.</span>
+          <span style={{ fontSize:13 }}>{txt}</span>
+        </div>;
+      })}
+      <button disabled={!sel[i]||shown[i]} onClick={()=>setShown(s=>({...s,[i]:true}))} style={{ marginTop:6, padding:"6px 14px", borderRadius:6, fontSize:13, cursor:sel[i]&&!shown[i]?"pointer":"default", background:sel[i]&&!shown[i]?T.blue.bg:"var(--color-background-secondary)", color:sel[i]&&!shown[i]?T.blue.txt:"var(--color-text-tertiary)", border:`0.5px solid ${sel[i]&&!shown[i]?T.blue.bdr:"var(--color-border-tertiary)"}` }}>
+        Submit answer
+      </button>
+      {shown[i] && (
+        <div style={{ marginTop:8 }}>
+          <div style={{ background:T.green.bg, borderRadius:8, padding:"8px 12px", marginBottom:6 }}>
+            <Lbl t="Correct answer"/>
+            <p style={{ fontSize:13, fontWeight:500, color:T.green.txt, margin:"0 0 2px" }}>{q.correct} — {q.tested_concept}</p>
+            <p style={{ fontSize:13, color:T.green.txt, margin:0 }}>{q.why_correct}</p>
+          </div>
+          {Object.entries(q.why_wrong).map(([l,e]) => <p key={l} style={{ fontSize:12, color:"var(--color-text-secondary)", margin:"0 0 2px" }}><strong>{l}:</strong> {e}</p>)}
+          <div style={{ background:T.coral.bg, borderRadius:8, padding:"8px 12px", marginTop:6 }}>
+            <Lbl t="Main trap"/><p style={{ fontSize:13, color:T.coral.txt, margin:0 }}>{q.trap}</p>
+          </div>
+        </div>
+      )}
+    </Card>
+  ));
+}
+
+function DiagramsTab() {
+  return DIAGRAMS.map((d,i) => (
+    <Card key={i}>
+      <div style={{ display:"flex", gap:6, flexWrap:"wrap", alignItems:"center", marginBottom:6 }}>
+        <Pill text={d.type} color="pink"/><span style={{ fontWeight:500, fontSize:15 }}>{d.title}</span>
+      </div>
+      {d.objectives.map((o,j) => <p key={j} style={{ fontSize:12, color:"var(--color-text-secondary)", margin:"0 0 2px", paddingLeft:8, borderLeft:"2px solid #ED93B1" }}>{o}</p>)}
+      <pre style={{ background:"var(--color-background-secondary)", borderRadius:8, padding:"12px", marginTop:8, fontSize:12, color:"var(--color-text-primary)", whiteSpace:"pre-wrap", fontFamily:"monospace", lineHeight:1.7, overflowX:"auto" }}>{d.content}</pre>
+    </Card>
+  ));
+}
+
+const STUDY_RENDERERS = { angles:AnglesTab, mindmap:MindMapTab, studyguide:StudyGuideTab, vignettes:VignettesTab, questions:QuestionsTab, diagrams:DiagramsTab };
+
+function App() {
+  const [activeTab, setActiveTab] = useState("angles");
+  const Comp = STUDY_RENDERERS[activeTab];
+  return (
+    <div style={{ padding:"0.5rem 0.75rem", maxWidth:860, margin:"0 auto" }}>
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:10 }}>
+        <div>
+          <p style={{ fontSize:15, fontWeight:500, margin:0 }}>🩸 Anticoagulants / Antiplatelets</p>
+          <p style={{ fontSize:11, color:"var(--color-text-secondary)", margin:0 }}>Georgetown SOM · Cardio Exam 2</p>
+        </div>
+      </div>
+      <div style={{ display:"flex", gap:4, overflowX:"auto", paddingBottom:6, marginBottom:12 }}>
+        {STUDY_TABS.map(t => {
+          const active=activeTab===t.id;
+          return <button key={t.id} onClick={()=>setActiveTab(t.id)} style={{ flexShrink:0, padding:"5px 12px", borderRadius:8, border:active?`1px solid ${T.purple.bdr}`:"0.5px solid var(--color-border-tertiary)", background:active?T.purple.bg:"transparent", color:active?T.purple.txt:"var(--color-text-secondary)", fontSize:12, fontWeight:active?500:400, cursor:"pointer", display:"flex", alignItems:"center", gap:5 }}>
+            <span style={{ fontSize:13 }}>{t.icon}</span>{t.label}
+          </button>;
+        })}
+      </div>
+      <Comp/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
