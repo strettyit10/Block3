@@ -1,0 +1,506 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}
+body{background:#fff;color:#111;padding:16px;font-size:13px;}
+h2{font-size:16px;font-weight:600;margin-bottom:2px;}
+.sub{color:#666;font-size:11px;margin-bottom:14px;}
+.lec-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;border-bottom:2px solid #e2e8f0;padding-bottom:10px;}
+.lt{padding:7px 14px;border-radius:20px;border:1.5px solid #CBD5E1;font-size:11px;cursor:pointer;background:#fff;color:#475569;font-weight:600;white-space:nowrap;}
+.lt.active{background:#7C3AED;color:#fff;border-color:#7C3AED;}
+.lecture{display:none;}.lecture.active{display:block;}
+.inner-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
+.it{padding:6px 12px;border-radius:16px;border:1.5px solid #CBD5E1;font-size:11px;cursor:pointer;background:#fff;color:#475569;font-weight:500;}
+.it.active{background:#0F766E;color:#fff;border-color:#0F766E;}
+.ipanel{display:none;}.ipanel.active{display:block;}
+.sec{font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px;}
+.card{border:1px solid #E2E8F0;border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.f{margin-bottom:8px;}
+.f label{font-size:10px;color:#94a3b8;display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:.03em;}
+.ans{font-size:12px;color:#1e293b;padding:3px 0;border-bottom:1.5px solid #c7d2fe;line-height:1.5;}
+.full{grid-column:1/-1;}
+table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:11px;}
+th{background:#F1F5F9;text-align:left;padding:6px 8px;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:#475569;border:1px solid #E2E8F0;font-weight:600;}
+td{padding:5px 8px;border:1px solid #E2E8F0;vertical-align:top;}
+.cell{font-size:11px;color:#1e293b;line-height:1.5;}
+tr:nth-child(even) td{background:#FAFAFA;}
+.rl{font-weight:600;font-size:11px;color:#1e293b;background:#F8FAFC!important;min-width:120px;}
+.trap{background:#FFF7ED;border-left:3px solid #F97316;border-radius:6px;padding:8px 12px;margin-bottom:8px;}
+.trap label{font-size:10px;color:#EA580C;display:block;margin-bottom:3px;font-weight:700;text-transform:uppercase;}
+.trap-ans{font-size:12px;color:#7C2D12;line-height:1.5;}
+.cl{border-left:3px solid;}
+.cl-p{border-color:#A78BFA;}.cl-b{border-color:#93C5FD;}.cl-g{border-color:#6EE7B7;}
+</style></head><body>
+<h2>🫀 Cardio Exam 2 — Pharmacology Reference</h2>
+<p class="sub">Pre-filled answer key — use alongside the blank drill for self-testing.</p>
+
+<div class="lec-tabs">
+  <div class="lt active" onclick="swL(0)">💊 Angina</div>
+  <div class="lt" onclick="swL(1)">🧪 Lipids</div>
+  <div class="lt" onclick="swL(2)">❤️ Heart Failure</div>
+  <div class="lt" onclick="swL(3)">🩺 Hypertension</div>
+  <div class="lt" onclick="swL(4)">🩸 Anticoag</div>
+</div>
+
+<!-- ══════════════════ ANGINA ══════════════════ -->
+<div class="lecture active" id="L0">
+<div class="inner-tabs">
+  <div class="it active" onclick="swI(0,0)">Drug Classes</div>
+  <div class="it" onclick="swI(0,1)">Angina Types</div>
+  <div class="it" onclick="swI(0,2)">Combos & Traps</div>
+</div>
+
+<div class="ipanel active" id="L0p0">
+<div class="sec">Nitrates</div>
+<table>
+<tr><th>Drug/Form</th><th>Onset / Duration / PK</th><th>Primary hemodynamic effect</th><th>Key ADR</th></tr>
+<tr><td class="rl">SL Nitroglycerin</td><td class="cell">Onset 1–3 min, duration ~30 min. For acute attacks.</td><td class="cell">NO → ↑ cGMP → venodilation (↓ preload) &gt;&gt; arterial dilation (↓ afterload)</td><td class="cell">Headache (most common — meningeal vasodilation), hypotension, reflex tachycardia</td></tr>
+<tr><td class="rl">Transdermal NTG</td><td class="cell">Remove patch 8–12 hr/day to prevent tolerance (nitrate-free interval)</td><td class="cell">Same: venodilation (↓ preload); some arterial dilation at higher doses</td><td class="cell">Tolerance via sulfhydryl group depletion + neurohormonal compensation</td></tr>
+<tr><td class="rl">Isosorbide mononitrate</td><td class="cell">NO first-pass metabolism (unlike dinitrate) → more predictable bioavailability; oral</td><td class="cell">Primarily venodilator (↓ preload) with some arterial dilation</td><td class="cell">Headache, hypotension, reflex tachycardia</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — Nitrate + Sildenafil</label><div class="trap-ans">Both ↑ cGMP: nitrates via NO → ↑ cGMP; sildenafil inhibits PDE-5 → prevents cGMP breakdown. Together → cGMP ↑↑↑↑ → profound vasodilation → fatal hypotension. Sildenafil: hold nitrates ≥24 hr. Tadalafil: hold ≥48 hr. ABSOLUTE contraindication.</div></div>
+
+<div class="sec">β-Blockers in Angina</div>
+<div class="fg">
+<div class="f full"><label>MOA → how does β-blockade reduce angina?</label><div class="ans">β₁ blockade → ↓ HR (chronotropy) + ↓ contractility (inotropy) → ↓ MVO₂ + ↑ diastolic filling time → ↑ coronary perfusion time</div></div>
+<div class="f"><label>Cardioselective agents</label><div class="ans">Atenolol, metoprolol (β₁-selective); also bisoprolol, nebivolol</div></div>
+<div class="f"><label>Non-selective agent</label><div class="ans">Propranolol (β₁ + β₂ blockade)</div></div>
+<div class="f"><label>Nebivolol unique mechanism</label><div class="ans">β₁ blockade + stimulates endothelial NO release → vasodilation. Least metabolic side effects, least sexual dysfunction.</div></div>
+<div class="f"><label>β-blocker + nitrate: why complementary?</label><div class="ans">Nitrate → ↓ preload + reflex tachycardia; β-blocker → blunts reflex tachycardia + ↓ contractility. Together: synergistic MVO₂ reduction.</div></div>
+<div class="f"><label>Abrupt withdrawal risk</label><div class="ans">Upregulated β-receptors become hypersensitive → rebound tachycardia, ↑ BP, angina, MI. Always TAPER.</div></div>
+</div>
+<div class="trap"><label>🚨 TRAP — β-blocker in asthma</label><div class="trap-ans">Non-selective (propranolol) blocks β₂ → bronchoconstriction. Cardioselective β-blockers (atenolol, metoprolol) are relatively safer but still CAUTIONED at high doses.</div></div>
+
+<div class="sec">CCBs in Angina</div>
+<table>
+<tr><th>Drug</th><th>DHP or non-DHP?</th><th>Heart rate effect</th><th>Classic ADR</th><th>Unique fact</th></tr>
+<tr><td class="rl">Amlodipine</td><td class="cell">DHP</td><td class="cell">Mild reflex tachycardia (slower onset → less than nifedipine)</td><td class="cell">Peripheral edema (vasodilation — NOT HF); flushing</td><td class="cell">Longest t½; only DHP safe in HFrEF; least reflex tachycardia of DHPs</td></tr>
+<tr><td class="rl">Nifedipine</td><td class="cell">DHP</td><td class="cell">↑ significant reflex tachycardia (rapid onset)</td><td class="cell">Peripheral edema, flushing, headache</td><td class="cell">Short-acting NOT recommended for chronic angina. Long-acting form OK.</td></tr>
+<tr><td class="rl">Verapamil</td><td class="cell">Non-DHP</td><td class="cell">↓ HR, ↓ AV conduction (negative chronotropy + dromotropy)</td><td class="cell">Constipation (classic!), bradycardia, AV block, ↑ digoxin levels</td><td class="cell">Most cardiac effect of all CCBs; P-gp inhibition → ↑ digoxin levels</td></tr>
+<tr><td class="rl">Diltiazem</td><td class="cell">Non-DHP</td><td class="cell">↓ HR, ↓ AV conduction (intermediate — less than verapamil)</td><td class="cell">Bradycardia, AV block; fewer GI effects than verapamil</td><td class="cell">Intermediate cardiac effect; useful when verapamil not tolerated</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — Verapamil + β-blocker</label><div class="trap-ans">Additive/synergistic suppression of AV nodal conduction → severe bradycardia, high-degree AV block, asystole. NEVER combine non-DHP CCB + β-blocker.</div></div>
+
+<div class="sec">Ranolazine</div>
+<div class="fg">
+<div class="f"><label>MOA (unique — not hemodynamic!)</label><div class="ans">Inhibits late inward Na⁺ current (late INa) → ↓ intracellular Na⁺ → ↓ Ca²⁺ via NCX reverse mode → ↓ diastolic wall tension → ↓ MVO₂</div></div>
+<div class="f"><label>Effect on HR and BP?</label><div class="ans">NO significant effect on HR or BP — hemodynamically neutral. This is its key advantage!</div></div>
+<div class="f"><label>Best patient for ranolazine</label><div class="ans">Chronic angina + hypotension/bradycardia + cannot tolerate hemodynamic effects of other antianginals</div></div>
+<div class="f"><label>Key ADR</label><div class="ans">QTc prolongation — avoid with other QT-prolonging drugs; monitor ECG</div></div>
+<div class="f"><label>Is it first-line?</label><div class="ans">No — second-line or add-on therapy</div></div>
+<div class="f"><label>Metabolism</label><div class="ans">CYP3A4 → interactions with azole antifungals, macrolide antibiotics</div></div>
+</div>
+</div>
+
+<div class="ipanel" id="L0p1">
+<div class="sec">Angina Types — Drug Selection</div>
+<table>
+<tr><th>Angina Type</th><th>Pathophysiology</th><th>ECG during pain</th><th>Best drug(s)</th><th>Contraindicated</th></tr>
+<tr><td class="rl">Stable angina</td><td class="cell">Fixed atherosclerotic plaque → demand ischemia (exertion only)</td><td class="cell">ST depression</td><td class="cell">β-blocker (1st line) + long-acting nitrate + CCB; ranolazine if refractory</td><td class="cell">None — all classes useful</td></tr>
+<tr><td class="rl">Unstable angina</td><td class="cell">Plaque rupture + thrombus → acute supply reduction (rest + exertion)</td><td class="cell">ST depression or transient elevation; T-wave inversions</td><td class="cell">Aspirin + β-blocker + heparin/LMWH + P2Y12 inhibitor (DAPT); urgent cath</td><td class="cell">—</td></tr>
+<tr><td class="rl">Variant (Prinzmetal)</td><td class="cell">Coronary vasospasm (NOT fixed plaque) → transient occlusion, usually at rest/at night</td><td class="cell">Transient ST ELEVATION during pain (resolves spontaneously)</td><td class="cell">CCBs (first-line — prevent vasospasm) + nitrates</td><td class="cell">β-blockers CONTRAINDICATED</td></tr>
+<tr><td class="rl">Microvascular</td><td class="cell">Small vessel dysfunction; normal epicardial coronaries on cath</td><td class="cell">May show ST changes or normal; positive stress test with normal angiography</td><td class="cell">β-blockers, CCBs, ranolazine (all effective)</td><td class="cell">Nitrates LESS effective (not absolute CI)</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — β-blockers in Variant Angina</label><div class="trap-ans">β-blockers block β₂-mediated vasodilation in coronary vascular smooth muscle, leaving α-adrenergic vasoconstriction UNOPPOSED → worsened vasospasm. Absolute contraindication.</div></div>
+<div class="trap"><label>🚨 TRAP — DHP CCBs in Afib</label><div class="trap-ans">DHP CCBs (amlodipine, nifedipine) act ONLY on vascular smooth muscle — NO AV nodal effect. CANNOT rate-control Afib. Use non-DHP CCBs (verapamil/diltiazem) or β-blockers for rate control.</div></div>
+</div>
+
+<div class="ipanel" id="L0p2">
+<div class="sec">Rational Combinations & Coronary Steal</div>
+<div class="fg">
+<div class="f"><label>Nitrate + β-blocker: why rational?</label><div class="ans">Complementary: β-blocker blunts nitrate-induced reflex tachycardia; together synergistically ↓ MVO₂ via ↓ preload + ↓ HR + ↓ contractility</div></div>
+<div class="f"><label>β-blocker + amlodipine: safe?</label><div class="ans">YES — safe and additive. Amlodipine (DHP) has no AV nodal effect → no additive conduction risk. Provides additional ↓ afterload.</div></div>
+<div class="f"><label>β-blocker + verapamil/diltiazem: safe?</label><div class="ans">NO — DANGEROUS. Both suppress AV nodal conduction → additive bradycardia/AV block/asystole.</div></div>
+<div class="f"><label>Nitrate tolerance: mechanism</label><div class="ans">Depletion of free sulfhydryl (-SH) groups needed for nitrate bioactivation to NO + neurohormonal compensation (RAAS/SNS counteract vasodilation)</div></div>
+<div class="f"><label>Nitrate tolerance: how to prevent</label><div class="ans">Eccentric/intermittent dosing: remove transdermal patch for 8–12 hrs daily (usually overnight). Avoid 24-hr continuous nitrate exposure.</div></div>
+<div class="f"><label>Coronary steal: which drugs cause it?</label><div class="ans">Dipyridamole, adenosine (used in pharmacologic stress testing)</div></div>
+<div class="f"><label>Coronary steal: mechanism</label><div class="ans">Potent arteriolar vasodilators dilate normal coronary vessels more than stenotic → ↑ flow to non-ischemic territories → ↓ perfusion to collateral-dependent ischemic zones → paradoxical ischemia</div></div>
+<div class="f"><label>Coronary steal: clinical use</label><div class="ans">Pharmacologic cardiac stress testing — dipyridamole/adenosine reveals ischemia in stenotic territories; used when patient can't exercise</div></div>
+</div>
+<div class="sec">Co-morbidity Drug Selection</div>
+<table>
+<tr><th>Co-morbidity</th><th>Preferred antianginal</th><th>Avoid</th></tr>
+<tr><td class="rl">Asthma/COPD</td><td class="cell">CCBs (amlodipine), ranolazine</td><td class="cell">Non-selective β-blockers (propranolol — β₂ block → bronchospasm)</td></tr>
+<tr><td class="rl">Raynaud's disease</td><td class="cell">DHP CCBs (amlodipine — peripheral vasodilation)</td><td class="cell">β-blockers (↓ peripheral blood flow → worsens Raynaud's)</td></tr>
+<tr><td class="rl">Hypotension</td><td class="cell">Ranolazine (hemodynamically neutral)</td><td class="cell">Nitrates, DHP CCBs, non-DHP CCBs (all further ↓ BP)</td></tr>
+<tr><td class="rl">Afib (rate control)</td><td class="cell">Non-DHP CCBs (verapamil, diltiazem) or β-blockers</td><td class="cell">DHP CCBs (amlodipine, nifedipine — NO AV nodal effect!)</td></tr>
+<tr><td class="rl">HFrEF</td><td class="cell">Amlodipine (only safe DHP in HFrEF); β-blockers (carvedilol, metoprolol succinate, bisoprolol)</td><td class="cell">Non-DHP CCBs (verapamil, diltiazem — worsen systolic function)</td></tr>
+<tr><td class="rl">Headaches</td><td class="cell">β-blockers, CCBs</td><td class="cell">Nitrates (↑ headache via meningeal vasodilation)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ══════════════════ LIPIDS ══════════════════ -->
+<div class="lecture" id="L1">
+<div class="inner-tabs">
+  <div class="it active" onclick="swI(1,0)">Statins</div>
+  <div class="it" onclick="swI(1,1)">Other Drug Classes</div>
+  <div class="it" onclick="swI(1,2)">Selection & Traps</div>
+</div>
+
+<div class="ipanel active" id="L1p0">
+<div class="sec">Statin MOA & Pharmacology</div>
+<div class="fg">
+<div class="f full"><label>Complete chain: HMG-CoA reductase inhibition → ↓ serum LDL</label><div class="ans">↓ hepatic cholesterol synthesis → liver senses low cholesterol → compensatory ↑ LDL receptor expression on hepatocytes → ↑ LDL clearance from circulation → ↓ serum LDL</div></div>
+<div class="f"><label>High-intensity statins</label><div class="ans">Atorvastatin 40–80 mg, rosuvastatin 20–40 mg → LDL ↓ ≥50%</div></div>
+<div class="f"><label>Statin with LOWER side effect profile</label><div class="ans">Pravastatin — not metabolized by CYP3A4 (fewer drug interactions); hydrophilic (less muscle penetration → less myopathy)</div></div>
+<div class="f"><label>Statin with MORE side effects</label><div class="ans">Simvastatin — more CYP3A4 interactions; avoid high doses; max 20 mg with amlodipine/CYP inhibitors</div></div>
+</div>
+<div class="sec">Statin Adverse Effects</div>
+<table>
+<tr><th>ADR</th><th>Mechanism</th><th>How to detect / manage</th></tr>
+<tr><td class="rl">Myopathy → rhabdomyolysis</td><td class="cell">Mitochondrial dysfunction in skeletal muscle; worsened by ↑ statin levels (CYP3A4 inhibitors, gemfibrozil)</td><td class="cell">Check CK if myalgia; stop statin if CK &gt;10× ULN or rhabdomyolysis (CK + myoglobinuria + AKI); hydrate aggressively</td></tr>
+<tr><td class="rl">↑ LFTs</td><td class="cell">Direct hepatocellular toxicity; usually mild and transient</td><td class="cell">Baseline LFTs; repeat if symptomatic; rarely requires stopping statin</td></tr>
+<tr><td class="rl">Teratogenicity</td><td class="cell">Cholesterol essential for fetal cell membrane synthesis and steroidogenesis; statins block this</td><td class="cell">Category X — absolute contraindication in pregnancy; use bile acid sequestrant instead</td></tr>
+<tr><td class="rl">↑ Blood glucose</td><td class="cell">Modest ↑ fasting glucose; mechanism unclear</td><td class="cell">Slightly ↑ new DM risk; cardiovascular benefit strongly outweighs this risk</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — Simvastatin + Gemfibrozil</label><div class="trap-ans">Gemfibrozil inhibits glucuronidation (UGT enzymes) → ↑ statin plasma levels → myopathy/rhabdomyolysis. Use FENOFIBRATE if a fibrate must be combined with a statin.</div></div>
+<div class="trap"><label>🚨 TRAP — Statin in pregnancy</label><div class="trap-ans">Category X — absolutely contraindicated. Bile acid sequestrants (cholestyramine, colesevelam) are not absorbed → safe in pregnancy for LDL lowering.</div></div>
+</div>
+
+<div class="ipanel" id="L1p1">
+<div class="sec">Non-Statin Drug Classes</div>
+<table>
+<tr><th>Drug Class</th><th>MOA</th><th>Primary lipid effect</th><th>Key ADR</th><th>Use when?</th></tr>
+<tr><td class="rl">Fibrates (fenofibrate, gemfibrozil)</td><td class="cell">PPARα activation → ↑ LPL expression → ↑ VLDL/TG hydrolysis and clearance; ↑ ApoA-I → ↑ HDL</td><td class="cell">↓ TG 40–60% (primary); ↑ HDL 10–20%; variable LDL effect</td><td class="cell">Myopathy (additive with statins!), cholelithiasis (↑ biliary cholesterol → gallstones), ↑ LFTs</td><td class="cell">First-line for severe hypertriglyceridemia (TG &gt;500 mg/dL) to prevent pancreatitis</td></tr>
+<tr><td class="rl">Bile acid sequestrants</td><td class="cell">Anion exchange resins bind BA in gut → ↓ enterohepatic BA circulation → liver converts more cholesterol to BA → ↑ LDL receptor expression → ↓ LDL</td><td class="cell">↓ LDL 15–30%; RAISES TG (compensatory ↑ VLDL synthesis)</td><td class="cell">Constipation, bloating; impairs absorption of fat-soluble vitamins (A,D,E,K) and drugs (warfarin, digoxin, levothyroxine)</td><td class="cell">Add-on for LDL; pregnancy (not absorbed); colesevelam also ↓ glucose in T2DM</td></tr>
+<tr><td class="rl">Ezetimibe</td><td class="cell">Blocks NPC1L1 transporter in intestinal brush border → ↓ dietary and biliary cholesterol absorption → ↑ hepatic LDL-R</td><td class="cell">↓ LDL 18–25%; synergistic with statin</td><td class="cell">Generally well tolerated; rare myopathy (additive with statin)</td><td class="cell">Add-on when max statin alone doesn't reach LDL goal; statin-intolerant patients</td></tr>
+<tr><td class="rl">PCSK9 inhibitors (evolocumab)</td><td class="cell">Monoclonal antibody against PCSK9 → prevents LDL-R degradation → more LDL-R recycled to cell surface → ↑ LDL clearance</td><td class="cell">↓ LDL 50–60% (most potent available)</td><td class="cell">Injection site reactions; generally well tolerated; expensive</td><td class="cell">FH; very high ASCVD risk on max statin + ezetimibe and still not at goal</td></tr>
+<tr><td class="rl">Omega-3 FA</td><td class="cell">↓ hepatic VLDL-TG synthesis and secretion; ↑ β-oxidation of fatty acids</td><td class="cell">↓ TG 30–50% at prescription doses (4g/day); may paradoxically ↑ LDL</td><td class="cell">GI upset, fishy aftertaste, mild antiplatelet effect (caution with anticoagulants)</td><td class="cell">Severe hypertriglyceridemia (TG &gt;500); prescription formulations needed</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — Bile acid sequestrants + warfarin</label><div class="trap-ans">Cholestyramine binds warfarin in gut → ↓ warfarin absorption → subtherapeutic INR → thrombosis. Rule: take all other medications ≥1 hr BEFORE or ≥4 hrs AFTER cholestyramine.</div></div>
+<div class="trap"><label>🚨 TRAP — Bile acid sequestrants in hypertriglyceridemia</label><div class="trap-ans">They RAISE TG — contraindicated when TG is already elevated! (Compensatory ↑ VLDL synthesis by liver when BA reabsorption is blocked.)</div></div>
+</div>
+
+<div class="ipanel" id="L1p2">
+<div class="sec">Step-Up Approach & Selection</div>
+<div class="fg">
+<div class="f full"><label>LDL step-up sequence</label><div class="ans">Step 1: Start high-intensity statin (atorvastatin or rosuvastatin) → Step 2: Add ezetimibe (oral, affordable, complementary MOA) → Step 3: Add PCSK9 inhibitor (injectable, expensive, most potent)</div></div>
+<div class="f"><label>When is a fibrate preferred over a statin?</label><div class="ans">TG &gt;500 mg/dL with pancreatitis risk — fibrate (or omega-3 FA) takes priority because TG-related pancreatitis risk is immediate</div></div>
+<div class="f"><label>Safest fibrate to combine with statin?</label><div class="ans">Fenofibrate — does NOT inhibit glucuronidation (unlike gemfibrozil). Safe to combine with statins.</div></div>
+</div>
+<div class="sec">Secondary Causes of Dyslipidemia</div>
+<table>
+<tr><th>Cause</th><th>Lipid effect</th><th>First step</th></tr>
+<tr><td class="rl">Hypothyroidism</td><td class="cell">↑ LDL (↓ LDL receptor expression)</td><td class="cell">Check TSH; treat hypothyroidism first — lipids may normalize with thyroid replacement</td></tr>
+<tr><td class="rl">Diabetes mellitus</td><td class="cell">↑ TG, ↓ HDL; LDL may be normal but small dense LDL</td><td class="cell">Improve glycemic control; SGLT-2i and GLP-1 agonists also improve lipids</td></tr>
+<tr><td class="rl">Nephrotic syndrome</td><td class="cell">↑ LDL, ↑ VLDL (↓ oncotic pressure → ↑ liver lipoprotein synthesis)</td><td class="cell">Treat underlying nephrotic syndrome; statin for CVD risk</td></tr>
+<tr><td class="rl">Obesity / alcohol</td><td class="cell">↑ TG, ↓ HDL</td><td class="cell">Lifestyle modification first (weight loss, exercise, alcohol reduction)</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — PCSK9 inhibitor as first-line</label><div class="trap-ans">Never first-line — reserve for after statin ± ezetimibe fail or are not tolerated. Reasons: very expensive, injectable (adherence issues), statins have decades of CV outcome evidence.</div></div>
+<div class="trap"><label>🚨 TRAP — OTC fish oil vs. prescription omega-3</label><div class="trap-ans">OTC fish oils vary in EPA/DHA content and purity — unreliable for therapeutic TG lowering. Need prescription formulations (e.g., Vascepa/icosapentaenoic acid 4g/day) for reliable, measurable TG reduction.</div></div>
+</div>
+</div>
+
+<!-- ══════════════════ HEART FAILURE ══════════════════ -->
+<div class="lecture" id="L2">
+<div class="inner-tabs">
+  <div class="it active" onclick="swI(2,0)">Pathophysiology</div>
+  <div class="it" onclick="swI(2,1)">RAAS / ARNI / MRA</div>
+  <div class="it" onclick="swI(2,2)">β-Blockers & Others</div>
+  <div class="it" onclick="swI(2,3)">ADHF & HFpEF</div>
+</div>
+
+<div class="ipanel active" id="L2p0">
+<div class="sec">HF Pathophysiology</div>
+<div class="fg">
+<div class="f"><label>Frank-Starling principle</label><div class="ans">↑ preload → ↑ SV (up to a point) → plateau/decline. Failing heart operates on a depressed curve.</div></div>
+<div class="f"><label>Compensatory response to ↓ CO (3 systems)</label><div class="ans">(1) ↑ SNS: ↑ HR + vasoconstriction; (2) ↑ RAAS: Ang II + aldosterone → Na/water retention; (3) ↑ ADH: water retention</div></div>
+<div class="f"><label>Cardiac remodeling = 4 features</label><div class="ans">Ventricular hypertrophy, fibrosis (collagen deposition), chamber dilation, cardiomyocyte apoptosis</div></div>
+<div class="f"><label>Drugs that REVERSE remodeling</label><div class="ans">ACEi/ARBs (↓ Ang II), β-blockers (↓ catecholamine toxicity), MRAs (↓ aldosterone fibrosis), ARNI (↑ natriuretic peptides + ↓ Ang II)</div></div>
+<div class="f"><label>Drugs for SYMPTOM RELIEF only (no mortality benefit)</label><div class="ans">Loop diuretics, digoxin — both relieve symptoms but do NOT reduce mortality in HFrEF</div></div>
+<div class="f"><label>4 pillars of HFrEF mortality-reducing therapy</label><div class="ans">(1) ACEi/ARB or ARNI, (2) β-blocker (carvedilol/metoprolol succinate/bisoprolol ONLY), (3) MRA (spironolactone/eplerenone), (4) SGLT-2i (empagliflozin/dapagliflozin)</div></div>
+</div>
+<div class="trap"><label>🚨 TRAP — Diuretics and mortality</label><div class="trap-ans">Diuretics reduce volume overload and relieve dyspnea/edema (symptom relief) but have NO proven mortality benefit in HFrEF. Do not mistake symptom improvement for disease modification.</div></div>
+</div>
+
+<div class="ipanel" id="L2p1">
+<div class="sec">ACEi, ARBs, and ARNI</div>
+<div class="fg">
+<div class="f"><label>ACEi MOA (complete chain)</label><div class="ans">Block ACE → ↓ Ang II → ↓ vasoconstriction + ↓ aldosterone + ↑ bradykinin → ↓ remodeling + vasodilation</div></div>
+<div class="f"><label>ACEi: 3 drugs to know</label><div class="ans">Enalapril, lisinopril, captopril</div></div>
+<div class="f"><label>ACEi dry cough: mechanism</label><div class="ans">↑ bradykinin (ACE normally degrades bradykinin) → B2 receptor → prostaglandin-mediated cough. Affects 10–15%.</div></div>
+<div class="f"><label>Switch to if ACEi cough?</label><div class="ans">ARB (losartan) — blocks AT1 receptor, NO effect on bradykinin → no cough</div></div>
+<div class="f"><label>ARNI: what does sacubitril do?</label><div class="ans">Inhibits neprilysin → ↑ ANP/BNP → ↑ cGMP → vasodilation + natriuresis + ↓ fibrosis + ↓ cardiac remodeling</div></div>
+<div class="f"><label>ARNI washout rule (CRITICAL)</label><div class="ans">MANDATORY 36-hour washout between ACEi and ARNI. Both ACE and neprilysin degrade bradykinin → dual blockade → massive bradykinin → life-threatening angioedema.</div></div>
+<div class="f"><label>Why use NT-proBNP (not BNP) on ARNI?</label><div class="ans">Sacubitril inhibits neprilysin → neprilysin normally degrades BNP → BNP falsely elevated. NT-proBNP not degraded by neprilysin → reliable HF biomarker.</div></div>
+<div class="f"><label>Contraindications to ACEi AND ARBs</label><div class="ans">Bilateral RAS, pregnancy (Category D/X), K⁺ &gt;5.5 mEq/L, severe CKD (GFR &lt;30)</div></div>
+</div>
+<div class="sec">MRAs: Spironolactone vs. Eplerenone</div>
+<div class="fg">
+<div class="f"><label>Key difference</label><div class="ans">Spironolactone: non-selective MRA (also blocks androgen/progesterone) → gynecomastia, impotence, menstrual irregularities. Eplerenone: selective MRA → no sex hormone side effects.</div></div>
+<div class="f"><label>Most dangerous electrolyte effect (both)</label><div class="ans">Hyperkalemia — monitor K⁺ closely; avoid if K⁺ &gt;5.0 or GFR &lt;30</div></div>
+<div class="f"><label>Triple RAAS blockade (ACEi + ARB + MRA)?</label><div class="ans">NO — dramatically ↑ hyperkalemia and AKI risk without added mortality benefit. Explicitly contraindicated.</div></div>
+</div>
+<div class="trap"><label>🚨 TRAP — ARNI given &lt;36 hrs after ACEi</label><div class="trap-ans">Life-threatening angioedema: ACEi blocks bradykinin degradation by ACE; sacubitril blocks degradation by neprilysin. Together → massive bradykinin → angioedema requiring intubation. 36-hour washout is ABSOLUTE.</div></div>
+<div class="trap"><label>🚨 TRAP — Gynecomastia on spironolactone</label><div class="trap-ans">Switch to eplerenone (selective MRA — no androgen/progesterone receptor binding). Spironolactone blocks androgen receptors → gynecomastia, impotence, loss of libido in men.</div></div>
+</div>
+
+<div class="ipanel" id="L2p2">
+<div class="sec">β-Blockers in HF</div>
+<div class="fg">
+<div class="f"><label>The paradox</label><div class="ans">β-blockers are negative inotropes but IMPROVE EF long-term by reversing catecholamine-mediated remodeling (↓ hypertrophy, fibrosis, apoptosis). Long-term benefit outweighs acute negative inotropic effect.</div></div>
+<div class="f"><label>3 specific β-blockers proven in HFrEF</label><div class="ans">Carvedilol (α₁+β₁+β₂), metoprolol succinate (β₁, extended-release ONLY), bisoprolol (β₁)</div></div>
+<div class="f"><label>When to START a β-blocker in HF</label><div class="ans">ONLY when euvolemic and hemodynamically stable. Start at LOW dose, titrate SLOWLY. Never initiate in acute decompensated HF.</div></div>
+</div>
+<div class="sec">Digoxin</div>
+<div class="fg">
+<div class="f"><label>MOA (complete chain)</label><div class="ans">Inhibits Na/K-ATPase → ↑ intracellular Na⁺ → reverse NCX → ↑ Ca²⁺ → ↑ inotropy (positive). ALSO vagomimetic: ↑ vagal tone → ↓ SA/AV conduction → ↓ HR (rate control in Afib)</div></div>
+<div class="f"><label>Therapeutic range for HF</label><div class="ans">0.5–0.9 ng/mL (NOT the old 1.0–2.0 — lower levels equally effective and safer)</div></div>
+<div class="f"><label>Toxicity: classic triad</label><div class="ans">(1) GI: N/V/anorexia; (2) CNS: yellow-green visual halos, xanthopsia, confusion; (3) Cardiac: bradycardia, AV block, ANY arrhythmia (PAT with block = classic)</div></div>
+<div class="f"><label>Electrolyte that potentiates toxicity</label><div class="ans">Hypokalemia — K⁺ competes with digoxin at Na/K-ATPase. Low K⁺ → less competition → ↑ digoxin binding → toxicity at 'therapeutic' levels</div></div>
+<div class="f"><label>Mortality benefit?</label><div class="ans">NO mortality benefit in HFrEF. Reduces symptoms and hospitalizations only (DIG trial).</div></div>
+<div class="f"><label>Reversal of severe toxicity</label><div class="ans">Digibind (anti-digoxin Fab fragments); also correct hypokalemia; avoid cardioversion in digoxin-toxic arrhythmias</div></div>
+</div>
+<div class="sec">SGLT-2 Inhibitors & Ivabradine</div>
+<div class="fg">
+<div class="f"><label>SGLT-2i unique feature vs. other HF drugs</label><div class="ans">Only drug class proven to reduce HF hospitalizations and mortality in BOTH HFrEF (DAPA-HF, EMPEROR-Reduced) AND HFpEF (EMPEROR-Preserved) — unique!</div></div>
+<div class="f"><label>SGLT-2i drugs to know</label><div class="ans">Empagliflozin (Jardiance), dapagliflozin (Farxiga)</div></div>
+<div class="f"><label>Ivabradine MOA</label><div class="ans">Selectively blocks HCN (If = funny current) channels in SA node → ↓ rate of spontaneous depolarization → ↓ HR only (no effect on contractility, BP, or AV conduction)</div></div>
+<div class="f"><label>Ivabradine: when indicated?</label><div class="ans">HFrEF + HR ≥70 bpm + SINUS RHYTHM + already on maximum tolerated β-blocker dose</div></div>
+</div>
+<div class="trap"><label>🚨 TRAP — β-blocker in ADHF</label><div class="trap-ans">NEVER start or up-titrate β-blockers during acute decompensation — heart is dependent on sympathetic support; β-blocker can precipitate cardiogenic shock. Wait until euvolemic and hemodynamically stable.</div></div>
+<div class="trap"><label>🚨 TRAP — Digoxin + furosemide</label><div class="trap-ans">Furosemide → hypokalemia → less K⁺ competition at Na/K-ATPase → ↑ digoxin binding → toxicity at 'normal' levels. Always monitor K⁺ when both drugs are prescribed.</div></div>
+<div class="trap"><label>🚨 TRAP — Ivabradine in Afib</label><div class="trap-ans">Ivabradine blocks the funny current (If) in the SA node ONLY. In Afib, the SA node is not driving the ventricular rate — the AV node is. Ivabradine has ZERO effect on ventricular rate in Afib.</div></div>
+</div>
+
+<div class="ipanel" id="L2p3">
+<div class="sec">Hydralazine / Isosorbide Dinitrate & Diuretics</div>
+<div class="fg">
+<div class="f"><label>Hydralazine/ISDN combination: indication #1</label><div class="ans">HFrEF when ACEi/ARB/ARNI cannot be used (bilateral RAS, severe hyperkalemia, CKD, angioedema)</div></div>
+<div class="f"><label>Indication #2 (specific trial)</label><div class="ans">Black patients with HFrEF — A-HeFT trial showed added mortality benefit when added to standard therapy (ACEi + β-blocker)</div></div>
+<div class="f"><label>First-line drug in ADHF</label><div class="ans">IV furosemide — rapidly ↓ volume overload, ↓ preload, relieves pulmonary congestion</div></div>
+<div class="f"><label>Loop diuretic MOA</label><div class="ans">Blocks NKCC2 in thick ascending limb → ↓ Na/K/Cl reabsorption → massive natriuresis/diuresis; also early venodilation (↓ preload even before diuresis)</div></div>
+<div class="f"><label>Furosemide vs. torsemide</label><div class="ans">Torsemide: oral bioavailability ~80% (more reliable vs. furosemide ~10–90%). Torsemide preferred for outpatient maintenance; furosemide IV preferred in ADHF.</div></div>
+<div class="f"><label>Loop diuretic electrolyte ADRs (4)</label><div class="ans">Hypokalemia, hyponatremia, hypomagnesemia, metabolic alkalosis; also hyperuricemia and ototoxicity (high-dose IV)</div></div>
+</div>
+<div class="sec">HFpEF vs. HFrEF</div>
+<table>
+<tr><th></th><th>HFrEF (EF &lt;40%)</th><th>HFpEF (EF ≥50%)</th></tr>
+<tr><td class="rl">Pathophysiology</td><td class="cell">Systolic dysfunction: ↓ contractility → ↓ EF → dilated, thin-walled</td><td class="cell">Diastolic dysfunction: ↓ relaxation/compliance → stiff ventricle → preserved EF, hypertrophied</td></tr>
+<tr><td class="rl">ACEi/ARB/ARNI</td><td class="cell">YES — cornerstone, mortality benefit</td><td class="cell">NO proven mortality benefit</td></tr>
+<tr><td class="rl">β-blockers</td><td class="cell">YES — 3 specific drugs proven</td><td class="cell">NO proven mortality benefit</td></tr>
+<tr><td class="rl">SGLT-2 inhibitors</td><td class="cell">YES (DAPA-HF, EMPEROR-Reduced)</td><td class="cell">YES — EMPEROR-Preserved. UNIQUE: only class proven in both!</td></tr>
+<tr><td class="rl">Diuretics</td><td class="cell">Symptoms only — no mortality benefit</td><td class="cell">Symptoms only — no mortality benefit</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — Non-DHP CCBs in HFrEF</label><div class="trap-ans">Verapamil and diltiazem are CONTRAINDICATED in HFrEF — negative inotropic and chronotropic effects worsen systolic function and may precipitate acute decompensation. Amlodipine (DHP) is the only CCB safe in HFrEF.</div></div>
+</div>
+</div>
+
+<!-- ══════════════════ HYPERTENSION ══════════════════ -->
+<div class="lecture" id="L3">
+<div class="inner-tabs">
+  <div class="it active" onclick="swI(3,0)">Diuretics</div>
+  <div class="it" onclick="swI(3,1)">RAAS & CCBs</div>
+  <div class="it" onclick="swI(3,2)">SNS & Vasodilators</div>
+  <div class="it" onclick="swI(3,3)">Special Scenarios</div>
+</div>
+
+<div class="ipanel active" id="L3p0">
+<div class="sec">2017 Classification + Control Mechanisms</div>
+<div class="fg">
+<div class="f"><label>BP Classification (2017 ACC/AHA)</label><div class="ans">Normal: &lt;120/80 · Elevated: 120–129/&lt;80 · Stage 1 HTN: 130–139/80–89 · Stage 2 HTN: ≥140/90</div></div>
+<div class="f"><label>SPRINT trial</label><div class="ans">Targeting SBP &lt;120 (intensive) vs. &lt;140 (standard) in high-risk non-diabetics → ↓ CV events by 25%, ↓ mortality by 27%. Supports aggressive BP targets.</div></div>
+<div class="f"><label>4 mechanisms controlling BP</label><div class="ans">(1) SNS: baroreceptors → ↑ HR/contractility/vasoconstriction; (2) RAAS: Ang II → vasoconstriction + aldosterone → Na/water retention; (3) Renal fluid control: pressure natriuresis; (4) Local vascular autoregulation</div></div>
+</div>
+<div class="sec">Diuretics — Nephron Sites</div>
+<table>
+<tr><th>Drug class</th><th>Nephron site</th><th>Transporter blocked</th><th>Key electrolyte effects</th></tr>
+<tr><td class="rl">Thiazides (HCTZ, chlorthalidone)</td><td class="cell">Distal convoluted tubule (DCT)</td><td class="cell">NCC (Na-Cl cotransporter)</td><td class="cell">↓ K⁺, ↓ Na⁺, ↑ Ca²⁺, ↑ uric acid, ↑ glucose, ↑ TG</td></tr>
+<tr><td class="rl">Loop diuretics (furosemide)</td><td class="cell">Thick ascending limb of loop of Henle</td><td class="cell">NKCC2</td><td class="cell">↓ K⁺, ↓ Na⁺, ↓ Mg²⁺, ↓ Ca²⁺ (opposite of thiazides!), metabolic alkalosis</td></tr>
+<tr><td class="rl">K⁺-sparing (triamterene)</td><td class="cell">Collecting duct (cortical)</td><td class="cell">ENaC (epithelial Na channel)</td><td class="cell">↑ K⁺ (hyperkalemia)</td></div></tr>
+<tr><td class="rl">Spironolactone</td><td class="cell">Collecting duct (cortical)</td><td class="cell">Aldosterone receptor (MRA)</td><td class="cell">↑ K⁺; gynecomastia/impotence (non-selective — blocks androgen receptors)</td></tr>
+</table>
+<div class="fg">
+<div class="f"><label>ALLHAT trial winner</label><div class="ans">Chlorthalidone (thiazide-like) was equal to or superior to CCBs and ACEi for preventing MI/stroke → supports thiazide as first-line for most uncomplicated HTN</div></div>
+<div class="f"><label>Chlorthalidone vs. HCTZ</label><div class="ans">Chlorthalidone: t½ ~50–60 hrs (vs. HCTZ ~10–12 hrs); more potent; better 24-hr BP control; more CV outcome evidence. Preferred when available.</div></div>
+<div class="f"><label>Thiazide useful in osteoporosis because...</label><div class="ans">↑ Ca²⁺ reabsorption in DCT → ↓ urinary Ca²⁺ excretion → ↑ bone mineral density; also useful in calcium nephrolithiasis</div></div>
+</div>
+<div class="trap"><label>🚨 TRAP — Thiazide in gout</label><div class="trap-ans">Thiazides cause volume contraction → ↑ proximal tubule Na reabsorption → urate follows Na → hyperuricemia → gout. CONTRAINDICATED in gout. If needed, losartan has uricosuric effect (preferred ARB).</div></div>
+<div class="trap"><label>🚨 TRAP — K⁺-sparing + ACEi/ARB</label><div class="trap-ans">Both ↑ K⁺ — K⁺-sparing blocks aldosterone-mediated K⁺ excretion; ACEi/ARB also ↓ aldosterone. Combination → severe hyperkalemia. Monitor closely; avoid if K⁺ &gt;5.0.</div></div>
+</div>
+
+<div class="ipanel" id="L3p1">
+<div class="sec">RAAS Blockers in HTN</div>
+<div class="fg">
+<div class="f"><label>3 mechanisms triggering renin release</label><div class="ans">(1) ↓ renal perfusion pressure (afferent arteriole baroreceptors), (2) ↓ NaCl delivery to macula densa, (3) ↑ SNS via β₁ receptors on JGA cells</div></div>
+<div class="f"><label>ACEi cough mechanism + switch</label><div class="ans">↑ bradykinin (ACE normally degrades it) → cough. Switch to ARB (no bradykinin effect → no cough).</div></div>
+<div class="f"><label>ACEi angioedema: mechanism + management</label><div class="ans">Bradykinin-mediated (NOT IgE) → stop ACEi → switch to ARB (very low cross-reactivity risk)</div></div>
+<div class="f"><label>Bilateral RAS + ACEi → why AKI?</label><div class="ans">Both kidneys need Ang II to maintain efferent arteriolar tone → maintain GFR; ACEi removes this → efferent dilates → GFR drops precipitously → AKI</div></div>
+<div class="f"><label>Compelling indications for ACEi/ARB</label><div class="ans">DM + proteinuria, HFrEF, post-MI, CKD with proteinuria — renoprotective (↓ intraglomerular pressure) independent of BP lowering</div></div>
+</div>
+<div class="sec">CCBs in HTN</div>
+<table>
+<tr><th>Drug</th><th>DHP?</th><th>AV nodal effect?</th><th>Classic ADR</th><th>Compelling use</th></tr>
+<tr><td class="rl">Amlodipine</td><td class="cell">DHP</td><td class="cell">NO — purely vascular</td><td class="cell">Peripheral edema, flushing, headache</td><td class="cell">Elderly, isolated systolic HTN, Raynaud's, stable angina; only DHP safe in HFrEF</td></tr>
+<tr><td class="rl">Nicardipine IV</td><td class="cell">DHP</td><td class="cell">NO — purely vascular</td><td class="cell">Flushing, reflex tachycardia, headache</td><td class="cell">IV for HTN emergency (neurological — encephalopathy, post-op neurosurgery)</td></tr>
+<tr><td class="rl">Verapamil</td><td class="cell">Non-DHP</td><td class="cell">YES — slows AV conduction; ↓ SA automaticity</td><td class="cell">Constipation (classic!), bradycardia, AV block, ↑ digoxin levels</td><td class="cell">HTN + Afib rate control; HTN + angina</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — DHP CCB for Afib rate control</label><div class="trap-ans">DHP CCBs (amlodipine, nifedipine, nicardipine) have NO AV nodal effect — cannot rate-control Afib. Use non-DHP CCBs (verapamil/diltiazem) or β-blockers for rate control in Afib.</div></div>
+<div class="trap"><label>🚨 TRAP — Verapamil + digoxin</label><div class="trap-ans">Verapamil inhibits P-glycoprotein → ↑ digoxin absorption + ↓ renal excretion → ↑ digoxin levels → toxicity. Always check digoxin level and reduce dose when starting verapamil.</div></div>
+</div>
+
+<div class="ipanel" id="L3p2">
+<div class="sec">β-Blocker Subtypes in HTN</div>
+<table>
+<tr><th>Drug</th><th>Receptor profile</th><th>Unique feature</th><th>Contraindication</th></tr>
+<tr><td class="rl">Propranolol</td><td class="cell">β₁ + β₂ (nonselective)</td><td class="cell">Also: migraine prophylaxis, essential tremor, portal HTN, thyrotoxicosis, performance anxiety</td><td class="cell">Asthma, COPD, Raynaud's, DM on insulin (masks hypoglycemia tachycardia)</td></tr>
+<tr><td class="rl">Metoprolol</td><td class="cell">β₁ selective (cardioselective)</td><td class="cell">Approved for HFrEF (succinate = extended-release only); post-MI, angina</td><td class="cell">High doses lose selectivity; caution in severe asthma</td></tr>
+<tr><td class="rl">Labetalol</td><td class="cell">α₁ + β₁ + β₂</td><td class="cell">IV available — drug of choice for HTN emergency in pregnancy; no reflex tachycardia</td><td class="cell">Severe asthma, cardiogenic shock</td></tr>
+<tr><td class="rl">Nebivolol</td><td class="cell">β₁ + stimulates endothelial NO release</td><td class="cell">Least metabolic side effects; least sexual dysfunction; vasodilation via NO</td><td class="cell">—</td></tr>
+<tr><td class="rl">Carvedilol</td><td class="cell">α₁ + β₁ + β₂</td><td class="cell">Approved for HFrEF; vasodilation from α₁ block</td><td class="cell">Severe asthma, decompensated HF</td></tr>
+</table>
+<div class="sec">α-Blockers & Central Sympatholytics</div>
+<div class="fg">
+<div class="f"><label>Prazosin/doxazosin: first-dose phenomenon</label><div class="ans">α₁ block → venous pooling → ↓ venous return → ↓ CO → orthostatic hypotension → syncope on first dose. Prevention: start LOW dose at BEDTIME.</div></div>
+<div class="f"><label>Tamsulosin: why selective for prostate?</label><div class="ans">α₁A subtype selective (prostate/bladder neck smooth muscle) → less systemic hypotension; primarily treats BPH</div></div>
+<div class="f"><label>Clonidine: MOA + withdrawal danger</label><div class="ans">Central α₂ agonist → ↓ NE release → ↓ SNS outflow → ↓ HR + ↓ SVR. Abrupt withdrawal → rebound hypertensive crisis (upregulated receptors → massive NE release). ALWAYS taper.</div></div>
+<div class="f"><label>Methyldopa: why safe in pregnancy?</label><div class="ans">Prodrug → α-methylNE → central α₂ agonist → ↓ SNS. Not teratogenic; decades of safety data. Unique ADR: positive Coombs test (hemolytic anemia), sedation, hepatotoxicity.</div></div>
+<div class="f"><label>Hydralazine: MOA + triple therapy rationale</label><div class="ans">Direct arteriolar vasodilator → ↓ SVR → reflex SNS activation (↑ HR) + RAAS activation (Na retention). MUST combine with β-blocker (blocks reflex tachy) + diuretic (prevents fluid retention) = triple therapy.</div></div>
+<div class="f"><label>Hydralazine high-dose ADR</label><div class="ans">Drug-induced lupus: ANA positive, anti-histone positive, anti-dsDNA NEGATIVE (vs. idiopathic lupus: anti-dsDNA positive)</div></div>
+</div>
+<div class="trap"><label>🚨 TRAP — Clonidine abrupt withdrawal</label><div class="trap-ans">Rebound hypertensive crisis: ↑ NE release from upregulated α₂-free receptors → severe HTN, tachycardia, diaphoresis. Can be worse than pre-treatment BP. ALWAYS taper. Treatment: restart clonidine (fastest) or IV labetalol.</div></div>
+<div class="trap"><label>🚨 TRAP — Hydralazine monotherapy</label><div class="trap-ans">Arteriolar vasodilation → reflex tachycardia (SNS) + Na/water retention (RAAS) → compensatory mechanisms blunt BP effect. ALWAYS combine: β-blocker (blocks reflex tachy) + diuretic (blocks Na retention).</div></div>
+</div>
+
+<div class="ipanel" id="L3p3">
+<div class="sec">Compelling Indications</div>
+<table>
+<tr><th>Condition</th><th>Preferred drug</th><th>Reason</th><th>Avoid</th></tr>
+<tr><td class="rl">DM + proteinuria</td><td class="cell">ACEi or ARB</td><td class="cell">↓ intraglomerular pressure → ↓ proteinuria → slows CKD progression (renoprotection beyond BP lowering)</td><td class="cell">Thiazides (↑ glucose); β-blockers (mask hypoglycemia)</td></tr>
+<tr><td class="rl">Post-MI</td><td class="cell">β-blocker + ACEi</td><td class="cell">↓ arrhythmias + remodeling + mortality</td><td class="cell">Short-acting DHP CCBs as monotherapy</td></tr>
+<tr><td class="rl">Pregnancy</td><td class="cell">Labetalol (IV first choice), methyldopa, nifedipine</td><td class="cell">Proven safety; not teratogenic</td><td class="cell">ACEi/ARBs (fetal renal agenesis, Category D/X); nitroprusside (cyanide to fetus); atenolol (fetal growth restriction)</td></tr>
+<tr><td class="rl">BPH + HTN</td><td class="cell">Doxazosin or prazosin (α₁ blocker)</td><td class="cell">α₁ blockade treats both HTN and BPH symptoms simultaneously</td><td class="cell">β-blockers (may worsen urinary retention)</td></tr>
+<tr><td class="rl">Raynaud's disease</td><td class="cell">DHP CCBs (amlodipine)</td><td class="cell">Peripheral vasodilation improves digital blood flow</td><td class="cell">β-blockers (block β₂-mediated vasodilation → ↓ flow to digits → worsens Raynaud's)</td></tr>
+<tr><td class="rl">Gout + HTN</td><td class="cell">Losartan (uricosuric ARB)</td><td class="cell">Blocks URAT1 → ↑ uric acid excretion in addition to AT1 block</td><td class="cell">Thiazides (↑ uric acid → precipitates/worsens gout)</td></tr>
+</table>
+<div class="sec">HTN Emergencies: IV Drugs</div>
+<table>
+<tr><th>Drug</th><th>MOA</th><th>Best indication</th><th>Key toxicity</th></tr>
+<tr><td class="rl">Nicardipine IV</td><td class="cell">DHP CCB (L-type Ca²⁺ block) → ↓ SVR; titratable IV infusion</td><td class="cell">HTN encephalopathy, neurological emergencies, post-op HTN</td><td class="cell">Well-tolerated; headache, flushing; titratable (advantage)</td></tr>
+<tr><td class="rl">Labetalol IV</td><td class="cell">α₁ + β₁ + β₂ block → ↓ SVR + ↓ HR; smooth BP ↓ without reflex tachycardia</td><td class="cell">HTN emergency in pregnancy (FIRST-LINE); aortic dissection</td><td class="cell">Bronchospasm risk in severe asthma</td></tr>
+<tr><td class="rl">Nitroprusside IV</td><td class="cell">NO donor → ↑ cGMP → balanced arterial + venous dilation (↓ preload + ↓ afterload)</td><td class="cell">Most severe emergencies (ICU only); HTN emergency with acute HF</td><td class="cell">Cyanide toxicity (prolonged use/renal failure); AVOID in pregnancy (fetal cyanide)</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — ACEi/ARB in pregnancy</label><div class="trap-ans">Absolutely contraindicated (Category D/X). Mechanism: block Ang II-mediated fetal renal development → fetal renal tubular dysgenesis → anuria → oligohydramnios → pulmonary hypoplasia, limb contractures, skull hypoplasia.</div></div>
+<div class="trap"><label>🚨 TRAP — Nitroprusside in pregnancy</label><div class="trap-ans">Nitroprusside releases cyanide → crosses placenta → fetal cyanide toxicity. Use IV labetalol (first-line) or IV hydralazine for hypertensive emergencies in pregnancy instead.</div></div>
+</div>
+</div>
+
+<!-- ══════════════════ ANTICOAG ══════════════════ -->
+<div class="lecture" id="L4">
+<div class="inner-tabs">
+  <div class="it active" onclick="swI(4,0)">Antiplatelets</div>
+  <div class="it" onclick="swI(4,1)">Heparin & LMWH</div>
+  <div class="it" onclick="swI(4,2)">Warfarin & DOACs</div>
+  <div class="it" onclick="swI(4,3)">tPA & Indications</div>
+</div>
+
+<div class="ipanel active" id="L4p0">
+<div class="sec">Aspirin</div>
+<div class="fg">
+<div class="f"><label>MOA</label><div class="ans">Irreversibly acetylates COX-1 (+ COX-2) → ↓ TXA₂ synthesis in platelets → ↓ platelet aggregation and vasoconstriction</div></div>
+<div class="f"><label>Why effect lasts 7–10 days</label><div class="ans">Irreversible COX-1 inhibition; platelets have no nucleus → cannot synthesize new COX-1. Effect persists for entire platelet lifetime.</div></div>
+<div class="f"><label>Acute ischemic stroke?</label><div class="ans">YES — give aspirin. If tPA was given: hold 24 hours post-tPA then resume.</div></div>
+<div class="f"><label>Hemorrhagic stroke?</label><div class="ans">NO — absolutely contraindicated. Must rule out hemorrhagic stroke by CT BEFORE giving aspirin.</div></div>
+<div class="f"><label>Children + viral illness</label><div class="ans">Avoid aspirin → Reye syndrome (hepatic encephalopathy from mitochondrial dysfunction)</div></div>
+</div>
+<div class="sec">P2Y12 Inhibitors</div>
+<table>
+<tr><th></th><th>Clopidogrel</th><th>Ticagrelor</th></tr>
+<tr><td class="rl">Prodrug?</td><td class="cell">YES — requires CYP2C19 hepatic activation</td><td class="cell">NO — direct-acting (no prodrug)</td></tr>
+<tr><td class="rl">Reversible?</td><td class="cell">NO — irreversible P2Y12 binding (covalent)</td><td class="cell">YES — reversible binding; faster offset</td></tr>
+<tr><td class="rl">Preferred in ACS?</td><td class="cell">Second choice; used in stable CAD, prior stroke/TIA</td><td class="cell">YES — PLATO trial: superior CV outcomes vs. clopidogrel</td></tr>
+<tr><td class="rl">Unique ADR</td><td class="cell">Bleeding; TTP (rare)</td><td class="cell">Dyspnea (non-bronchospastic, adenosine-mediated; ~14% of patients)</td></tr>
+<tr><td class="rl">Genetic resistance</td><td class="cell">CYP2C19 poor metabolizers → insufficient active metabolite → ↑ stent thrombosis risk. FDA black box warning.</td><td class="cell">No pharmacogenomic issue — direct-acting</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — Clopidogrel + CYP2C19 poor metabolizer</label><div class="trap-ans">~15% of Caucasians, ~30% of Asians are CYP2C19 poor metabolizers → inadequate clopidogrel activation → ↑ stent thrombosis. Prefer ticagrelor in high-risk ACS. FDA black box warning on clopidogrel.</div></div>
+<div class="trap"><label>🚨 TRAP — Ticagrelor dyspnea</label><div class="trap-ans">NOT bronchospasm. Mechanism: ticagrelor inhibits adenosine uptake → adenosine accumulates → stimulates pulmonary C-fibers → dyspnea. Usually mild/transient. Switch to clopidogrel only if truly bothersome.</div></div>
+</div>
+
+<div class="ipanel" id="L4p1">
+<div class="sec">UFH vs. LMWH</div>
+<table>
+<tr><th></th><th>UFH</th><th>LMWH (enoxaparin)</th></tr>
+<tr><td class="rl">MOA</td><td class="cell">Activates AT-III → inactivates IIa + Xa + IXa (both thrombin and Xa)</td><td class="cell">Activates AT-III → primarily anti-Xa (insufficient chain length to bridge AT-III to thrombin)</td></tr>
+<tr><td class="rl">Monitoring</td><td class="cell">aPTT (1.5–2.5× normal)</td><td class="cell">Anti-Xa levels — NOT aPTT</td></tr>
+<tr><td class="rl">Renally cleared?</td><td class="cell">NO — RES clearance; safe in CKD (preferred!)</td><td class="cell">YES — accumulates in CKD (GFR &lt;30); ↑ bleeding risk; contraindicated in severe renal failure</td></tr>
+<tr><td class="rl">Reversal</td><td class="cell">Protamine sulfate — FULL reversal</td><td class="cell">Protamine — PARTIAL reversal (~60% anti-Xa activity)</td></tr>
+<tr><td class="rl">HIT risk</td><td class="cell">Higher (~1–3%)</td><td class="cell">Lower (~0.1%) — but LMWH still cross-reacts with HIT antibodies!</td></tr>
+<tr><td class="rl">Safe in pregnancy?</td><td class="cell">YES (doesn't cross placenta)</td><td class="cell">YES — preferred in pregnancy (predictable dosing, less HIT)</td></tr>
+</table>
+<div class="sec">HIT Type II — Critical Knowledge</div>
+<div class="fg">
+<div class="f full"><label>HIT mechanism (complete chain)</label><div class="ans">Heparin + PF4 → IgG antibodies form (days 5–14) → IgG-heparin-PF4 binds FcγRIIA on platelets → platelet ACTIVATION → platelet consumption (thrombocytopenia) + procoagulant activity → THROMBOSIS</div></div>
+<div class="f"><label>Timing</label><div class="ans">Days 5–14 of heparin (earlier if prior exposure within 3 months — memory B cells)</div></div>
+<div class="f"><label>Platelet drop threshold</label><div class="ans">≥50% fall from baseline (e.g., 300K → 150K = HIT until proven otherwise)</div></div>
+<div class="f"><label>HIT paradox</label><div class="ans">Thrombocytopenia WITH thrombosis — low platelets but clotting, not bleeding! ('White clot syndrome')</div></div>
+<div class="f"><label>Management step 1</label><div class="ans">STOP ALL heparin immediately — including IV UFH, SQ heparin, heparin flushes, LMWH</div></div>
+<div class="f"><label>Management step 2</label><div class="ans">Start non-heparin anticoagulant: argatroban (preferred in renal failure — hepatically cleared) or bivalirudin</div></div>
+</div>
+<div class="trap"><label>🚨 TRAP — LMWH safe in HIT?</label><div class="trap-ans">FALSE — LMWH cross-reacts with HIT antibodies (heparin-PF4 antibodies recognize heparin regardless of chain length). Only truly non-heparin anticoagulants (argatroban, bivalirudin, fondaparinux) are safe.</div></div>
+<div class="trap"><label>🚨 TRAP — Warfarin acutely in HIT</label><div class="trap-ans">Protein C has the shortest t½ (~6 hrs) of all VitK-dependent factors → depleted FIRST when warfarin started → transient hypercoagulable state → paradoxical thrombosis + skin necrosis. Must bridge with argatroban ≥5 days with INR &gt;2.0 first.</div></div>
+<div class="trap"><label>🚨 TRAP — Platelet transfusion in HIT</label><div class="trap-ans">Provides more platelet surface for antibody-activated FcγRIIA signaling → MORE thrombin generation → WORSE thrombosis. Avoid unless life-threatening bleeding (rare in HIT).</div></div>
+</div>
+
+<div class="ipanel" id="L4p2">
+<div class="sec">Warfarin</div>
+<div class="fg">
+<div class="f"><label>MOA</label><div class="ans">Inhibits VKOR (vitamin K epoxide reductase) → ↓ γ-carboxylation of factors II, VII, IX, X, protein C, protein S → inactive clotting factors</div></div>
+<div class="f"><label>Why INR rises first</label><div class="ans">Factor VII has shortest t½ (~6 hrs) → depleted first → PT/INR ↑. Full anticoagulation requires depletion of factor II (t½ ~60 hrs) → takes 2–5 days.</div></div>
+<div class="f"><label>INR goals</label><div class="ans">Non-valvular Afib/DVT/PE: 2.0–3.0. Mechanical heart valves: 2.5–3.5.</div></div>
+<div class="f"><label>Reversal for life-threatening bleeding</label><div class="ans">4-factor PCC (fastest, most complete) + Vitamin K IV (restores sustained synthesis)</div></div>
+<div class="f"><label>Amiodarone + warfarin</label><div class="ans">Amiodarone inhibits CYP2C9 → ↑ warfarin levels → ↑ INR → bleeding. Effect persists months (amiodarone t½ ~40–55 days).</div></div>
+<div class="f"><label>Rifampin + warfarin</label><div class="ans">Rifampin induces CYP2C9 → ↑ warfarin metabolism → ↓ INR → clotting risk. Need significantly higher warfarin dose.</div></div>
+</div>
+<div class="sec">DOACs Comparison</div>
+<table>
+<tr><th>Drug</th><th>Target</th><th>Reversal agent</th><th>Renal clearance</th><th>Key note</th></tr>
+<tr><td class="rl">Dabigatran</td><td class="cell">Direct IIa (thrombin) inhibitor</td><td class="cell">Idarucizumab (Praxbind) — specific mAb; FDA 2015</td><td class="cell">~80% — MOST renally cleared; avoid GFR &lt;15–30</td><td class="cell">GI upset (take with food); ↑ GI bleed vs. warfarin</td></tr>
+<tr><td class="rl">Apixaban</td><td class="cell">Direct Xa inhibitor</td><td class="cell">Andexanet alfa — recombinant Xa decoy; FDA 2018</td><td class="cell">~27% — LEAST renally cleared; preferred in CKD</td><td class="cell">Best renal profile; twice daily; ↓ GI/ICH bleeding vs. others</td></tr>
+<tr><td class="rl">Rivaroxaban</td><td class="cell">Direct Xa inhibitor</td><td class="cell">Andexanet alfa</td><td class="cell">~33%</td><td class="cell">Once daily (Afib/VTE prevention); take with evening meal</td></tr>
+<tr><td class="rl">Edoxaban</td><td class="cell">Direct Xa inhibitor</td><td class="cell">Andexanet alfa</td><td class="cell">~35%</td><td class="cell">Once daily; requires initial 5–10 days parenteral anticoagulation first</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — DOAC in mechanical heart valve</label><div class="trap-ans">ALL DOACs are CONTRAINDICATED in mechanical heart valves. RE-ALIGN trial: dabigatran showed more thromboembolic events AND more bleeding than warfarin. WARFARIN IS THE ONLY APPROVED ANTICOAGULANT FOR MECHANICAL VALVES.</div></div>
+<div class="trap"><label>🚨 TRAP — Warfarin skin necrosis in HIT transition</label><div class="trap-ans">Protein C (t½ ~6 hrs, shortest of VitK-dependent factors) depleted first → transient hypercoagulable state → thrombosis of dermal microvasculature → skin necrosis. Must bridge with argatroban (≥5 days, INR &gt;2.0) before transitioning to warfarin.</div></div>
+</div>
+
+<div class="ipanel" id="L4p3">
+<div class="sec">tPA (Alteplase) — Fibrinolytic</div>
+<div class="fg">
+<div class="f"><label>MOA</label><div class="ans">Binds fibrin-bound plasminogen → converts plasminogen to plasmin → plasmin degrades fibrin → clot dissolution. Relatively clot-specific.</div></div>
+<div class="f"><label>Acute ischemic stroke: time window</label><div class="ans">Within 4.5 hours of LAST KNOWN WELL TIME (not symptom recognition)</div></div>
+<div class="f"><label>Must do BEFORE giving tPA</label><div class="ans">Non-contrast CT head to EXCLUDE hemorrhagic stroke. This is non-negotiable.</div></div>
+<div class="f"><label>BP threshold for tPA in stroke</label><div class="ans">&lt;185/110 mmHg (NOT the standard HTN threshold of 140/90). Treat BP if needed, then reassess.</div></div>
+<div class="f"><label>Aspirin timing after tPA</label><div class="ans">Hold all antiplatelets for 24 hours AFTER tPA. Giving aspirin with tPA significantly ↑ ICH risk.</div></div>
+<div class="f"><label>tPA in STEMI: when?</label><div class="ans">If primary PCI not available within 120 minutes of first medical contact</div></div>
+<div class="f"><label>Absolute contraindications (key 4)</label><div class="ans">(1) History of intracranial hemorrhage, (2) Active internal bleeding, (3) Ischemic stroke or head trauma &lt;3 months, (4) Suspected aortic dissection</div></div>
+<div class="f"><label>tPA in hemorrhagic stroke?</label><div class="ans">ABSOLUTELY CONTRAINDICATED — catastrophic hemorrhagic expansion → herniation and death</div></div>
+</div>
+<div class="sec">Indication-Based Drug Selection</div>
+<table>
+<tr><th>Scenario</th><th>IV/SQ anticoagulant</th><th>Oral anticoagulant</th><th>Antiplatelet</th></tr>
+<tr><td class="rl">DVT / PE (acute)</td><td class="cell">Heparin (UFH) or LMWH for initial anticoagulation</td><td class="cell">DOAC (preferred) or warfarin (INR 2–3) for ≥3 months</td><td class="cell">Not indicated</td></tr>
+<tr><td class="rl">Afib (stroke ppx)</td><td class="cell">Heparin/LMWH for bridging if needed</td><td class="cell">DOAC preferred (non-valvular); warfarin for mechanical valves or DOAC CI</td><td class="cell">Not used alone for stroke prevention</td></tr>
+<tr><td class="rl">Mechanical heart valve</td><td class="cell">Heparin bridging (peri-procedure)</td><td class="cell">WARFARIN ONLY (INR 2.5–3.5) — no DOAC approved/safe</td><td class="cell">Not indicated</td></tr>
+<tr><td class="rl">ACS</td><td class="cell">Heparin (UFH) or LMWH during acute phase/PCI</td><td class="cell">Not routinely continued unless Afib also present</td><td class="cell">Aspirin + P2Y12 inhibitor (DAPT) — standard of care</td></tr>
+<tr><td class="rl">Acute ischemic stroke</td><td class="cell">Not routinely used acutely</td><td class="cell">Not started acutely</td><td class="cell">Aspirin ASAP (if tPA given: wait 24 hrs). tPA if &lt;4.5 hrs + no contraindications.</td></tr>
+</table>
+<div class="trap"><label>🚨 TRAP — tPA + aspirin simultaneously in stroke</label><div class="trap-ans">Do NOT give aspirin or any antiplatelet WITH tPA acutely. Aspirin starts 24 hours AFTER tPA. Concurrent use significantly ↑ symptomatic ICH risk.</div></div>
+<div class="trap"><label>🚨 TRAP — Last seen well vs. last known well</label><div class="trap-ans">Use LAST KNOWN WELL time — the last time patient was observed neurologically normal (not when symptoms were noticed). Wake-up strokes: LKW = bedtime. If unknown → do NOT give tPA (conservative approach).</div></div>
+</div>
+</div>
+
+<script>
+function swL(i){
+  document.querySelectorAll('.lecture').forEach((l,j)=>l.classList.toggle('active',i===j));
+  document.querySelectorAll('.lt').forEach((t,j)=>t.classList.toggle('active',i===j));
+}
+function swI(lec,i){
+  const panels=document.querySelectorAll('#L'+lec+' .ipanel');
+  const tabs=document.querySelectorAll('#L'+lec+' .it');
+  panels.forEach((p,j)=>p.classList.toggle('active',i===j));
+  tabs.forEach((t,j)=>t.classList.toggle('active',i===j));
+}
+</script>
+</body></html>
