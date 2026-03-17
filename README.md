@@ -1,4 +1,4 @@
-# Step 1 Site
+# Block 3 Site
 
 This package is ready for GitHub Pages.
 
