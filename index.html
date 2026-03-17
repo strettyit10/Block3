@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Step 1 Study Site</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="tag" style="display:inline-block;background:rgba(255,255,255,.14);padding:5px 10px;border-radius:999px;font-size:12px;font-weight:700;margin-bottom:12px;">Personal Step 1 Study Site</div>
+      <h1>High-yield cardio review, organized like a mini website.</h1>
+      <p>
+        This package is ready for GitHub Pages or any static host. Each guide keeps its original printable HTML layout,
+        while this landing page gives you a clean home page for navigation and Notion embedding.
+      </p>
+      <div class="toolbar">
+        <a class="btn" href="acute-mi.html">Open Acute MI</a>
+        <a class="btn" href="cv-risk-chest-pain.html">Open CV Risk + Chest Pain</a>
+        <a class="btn" href="cardio-pathology.html">Open Cardio Pathology</a>
+        <a class="btn secondary" href="#deploy">Deployment steps</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <div class="tag">Acute MI</div>
+        <h2>Acute MI Wrap-Up</h2>
+        <p>Detailed case-based guide covering ECG-first ACS workflow, NSTEMI vs STEMI, inferior MI, RCA localization, RV infarct, PCI vs thrombolytics, and discharge planning.</p>
+        <ul class="list">
+          <li>ECG first within 10 minutes</li>
+          <li>Serial ECG with symptom change</li>
+          <li>Inferior MI and RV infarct traps</li>
+          <li>One-page cram PDF included separately</li>
+        </ul>
+        <a class="btn" href="acute-mi.html">Read guide</a>
+      </article>
+
+      <article class="card">
+        <div class="tag">CV Risk + Chest Pain</div>
+        <h2>Exam-heavy decision rules</h2>
+        <p>High-information printable guide built around common exam questions: ECG vs troponin timing, HEART/TIMI use, statin groups, CAC, and follow-up monitoring.</p>
+        <ul class="list">
+          <li>Chest pain workflow</li>
+          <li>4 statin benefit groups</li>
+          <li>CAC score decision making</li>
+          <li>Routine statin monitoring traps</li>
+        </ul>
+        <a class="btn" href="cv-risk-chest-pain.html">Read guide</a>
+      </article>
+
+      <article class="card">
+        <div class="tag">Cardio Pathology</div>
+        <h2>Big-picture cardio pathology</h2>
+        <p>Your broader pathology sheet covering congenital lesions, ischemic heart disease, cardiomyopathies, heart failure, valvular disease, endocarditis, and pericardial disease.</p>
+        <ul class="list">
+          <li>Congenital lesion comparisons</li>
+          <li>MI complications timeline</li>
+          <li>Valve murmurs and classic clues</li>
+          <li>Rapid comparison tables</li>
+        </ul>
+        <a class="btn" href="cardio-pathology.html">Read guide</a>
+      </article>
+    </section>
+
+    <section class="split">
+      <div class="panel" id="deploy">
+        <h3>How to deploy this site</h3>
+        <ol class="list">
+          <li>Download the zip package from ChatGPT.</li>
+          <li>Create a new public GitHub repository, for example <b>step1-site</b>.</li>
+          <li>Upload the contents of the zip directly into the repo root.</li>
+          <li>In GitHub, go to <b>Settings → Pages</b>.</li>
+          <li>Choose <b>Deploy from branch</b>, then <b>main</b> and <b>/(root)</b>.</li>
+          <li>After GitHub publishes, your public link will be:
+            <div class="note">https://YOUR-USERNAME.github.io/step1-site/</div>
+          </li>
+          <li>Paste that link into Notion using <b>/embed</b>.</li>
+        </ol>
+        <div class="warn"><b>Important:</b> Notion will preserve the visual layout best through <b>Embed</b>. A direct HTML import into Notion will not keep the CSS formatting.</div>
+      </div>
+
+      <div class="panel">
+        <h3>What this upgraded package includes</h3>
+        <div class="mini">
+          <span class="chip">Landing page</span>
+          <span class="chip">Reusable CSS</span>
+          <span class="chip">Printable guides</span>
+          <span class="chip">GitHub Pages ready</span>
+          <span class="chip">Notion embed friendly</span>
+        </div>
+        <ul class="list">
+          <li>A polished homepage so the site feels intentional instead of like a raw file dump.</li>
+          <li>Direct links to each existing guide without changing their original study layout.</li>
+          <li>A structure you can keep expanding with new lectures or blocks.</li>
+          <li>A README file with simple deployment instructions.</li>
+        </ul>
+        <div class="note"><b>Best use:</b> host once, then keep adding new topic pages over time. Your Notion page can embed the site home page or any specific topic page.</div>
+      </div>
+    </section>
+
+    <footer>
+      Built as a static study site package for GitHub Pages / Notion embed.
+    </footer>
+  </div>
+</body>
+</html>
